@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  PortfolioViewController.swift
 //  CryptoTrackingApp
 //
 //  Created by Güven Boydak on 4.04.2024.
@@ -7,13 +7,12 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class PortfolioViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .blue
     }
-
+    
 
 }
-
