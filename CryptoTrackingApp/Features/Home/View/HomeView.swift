@@ -24,7 +24,7 @@ final class HomeView: UIView {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.isHidden = true
         collectionView.alpha = 0
-        collectionView.register(HomeCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(HomeCoinAndTrendingCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         return collectionView
     }()
     private  let coinsButton: UIButton = {
@@ -97,7 +97,9 @@ final class HomeView: UIView {
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
+        homeVM.delegate = self
         setup()
+        homeVM.fetchCoins()
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -241,5 +243,13 @@ extension HomeView {
                                                              attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                           .foregroundColor: UIColor.systemGray]), for: .normal)
         trendingBarView.backgroundColor = .lightGray
+    }
+}
+// MARK: - HomeViewModelProtocol
+extension HomeView: HomeViewModelProtocol {
+    func didİnitialCoins() {
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
     }
 }
