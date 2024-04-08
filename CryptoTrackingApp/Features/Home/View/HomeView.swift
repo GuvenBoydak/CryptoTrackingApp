@@ -31,13 +31,13 @@ final class HomeView: UIView {
         let button = UIButton()
         button.setAttributedTitle(NSAttributedString(string: "Coin's",
                                                      attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
-                                                                  .foregroundColor: UIColor.systemGray]), for: .normal)
+                                                                  .foregroundColor: UIColor.systemBlue]), for: .normal)
         button.addTarget(self, action: #selector(didTapCoinsButton), for: .touchUpInside)
         return button
     }()
     private let coinsBarView: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .systemBlue
         return view
     }()
     private  let trendingButton: UIButton = {
@@ -99,7 +99,7 @@ final class HomeView: UIView {
         super.init(frame: frame)
         homeVM.delegate = self
         setup()
-        homeVM.fetchCoins()
+        homeVM.callApi(requestType: .coin)
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -221,6 +221,7 @@ extension HomeView {
                                                              attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                           .foregroundColor: UIColor.systemGray]), for: .normal)
         exchangeBarView.backgroundColor = .lightGray
+        homeVM.callApi(requestType: .coin)
     }
     @objc private func didTapTrendingButton(_ sender: UIButton) {
         setTitleColor(button: sender, color: .systemBlue)
@@ -232,6 +233,7 @@ extension HomeView {
                                                              attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                           .foregroundColor: UIColor.systemGray]), for: .normal)
         exchangeBarView.backgroundColor = .lightGray
+        homeVM.callApi(requestType: .trending)
     }
     @objc private func didTapExchangeButton(_ sender: UIButton) {
         setTitleColor(button: sender, color: .systemBlue)
@@ -247,7 +249,7 @@ extension HomeView {
 }
 // MARK: - HomeViewModelProtocol
 extension HomeView: HomeViewModelProtocol {
-    func didİnitialCoins() {
+    func didInitial() {
         DispatchQueue.main.async {
             self.collectionView.reloadData()
         }

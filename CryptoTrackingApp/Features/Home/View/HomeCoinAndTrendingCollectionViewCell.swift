@@ -7,6 +7,7 @@
 
 import UIKit
 import DGCharts
+import SwiftSVG
 
 final class HomeCoinAndTrendingCollectionViewCell: UICollectionViewCell {
     // MARK: - UIElements
@@ -14,7 +15,7 @@ final class HomeCoinAndTrendingCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.text = "1"
         label.textColor = .label
-        label.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 9, weight: .medium)
         return label
     }()
     private let image: UIImageView = {
@@ -47,6 +48,12 @@ final class HomeCoinAndTrendingCollectionViewCell: UICollectionViewCell {
         chartV.leftAxis.enabled = false
         chartV.rightAxis.enabled = false
         return chartV
+    }()
+    private let chartImage: UIImageView = {
+        let image = UIImageView()
+        image.clipsToBounds = true
+        image.layer.cornerRadius = 8
+        return image
     }()
     private let priceLabel: UILabel = {
         let label = UILabel()
@@ -89,7 +96,7 @@ extension HomeCoinAndTrendingCollectionViewCell {
         imageAndName.spacing = 10
         let priceStackView = UIStackView(arrangedSubviews: [priceLabel,priceChangeLabel])
         priceStackView.axis = .vertical
-        stackView = UIStackView(arrangedSubviews: [imageAndName,chartView,priceStackView])
+        stackView = UIStackView(arrangedSubviews: [imageAndName,chartView,chartImage,priceStackView])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.spacing = 12
@@ -102,23 +109,26 @@ extension HomeCoinAndTrendingCollectionViewCell {
             make.width.equalTo(20)
         }
         stackView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(4)
-            make.leading.equalTo(countLabel.snp.trailing).offset(2)
+            make.top.equalToSuperview().offset(8)
+            make.leading.equalTo(countLabel.snp.trailing).offset(4)
         }
         image.snp.makeConstraints { make in
-            make.width.equalTo(35)
+            make.width.equalTo(30)
+            make.height.equalTo(40)
+        }
+        chartImage.snp.makeConstraints { make in
+            make.width.equalTo(125)
             make.height.equalTo(40)
         }
         chartView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.bottom.equalToSuperview()
             make.width.equalTo(125)
             make.height.equalTo(40)
         }
     }
-    func configure(viewModel: HomeCoinAndTrendingCollectionViewCellViewModel) {
-        switch viewModel {
-        case .coins(let coin):
+    func configure(model: Codable) {
+        if let coin = model as? Coin {
+            chartImage.isHidden = true
+            chartView.isHidden = false
             countLabel.text = "\(coin.marketCapRank)"
             if let url = URL(string: coin.image) {
                 ImageLoader.shared.downloadImage(url) { [weak self] result in
@@ -132,20 +142,55 @@ extension HomeCoinAndTrendingCollectionViewCell {
                     }
                 }
             }
-            nameLabel.text = coin.name
+            nameLabel.text = coin.symbol.uppercased()
             totalMarketCapLabel.text = coin.marketCap.formattedWithAbbreviations()
             configureChartView(price: coin.sparklineIn7D.price,priceChange: coin.priceChangePercentage24H)
             priceLabel.text = coin.currentPrice.asCurrencyWith6Decimals()
-            if coin.priceChangePercentage24H.description.contains("-") {
-                priceChangeLabel.textColor = .systemRed
-                priceChangeLabel.text = "\(coin.priceChangePercentage24H.rounded(toDecimalPlaces: 2))%"
-            } else {
-                priceChangeLabel.textColor = .systemGreen
-                priceChangeLabel.text = "+\(coin.priceChangePercentage24H.rounded(toDecimalPlaces: 2))%"
+            priceChangeLabelConfigure(value: coin.priceChangePercentage24H)
+        } else if let trending = model as? TrendingCoin {
+            chartView.isHidden = true
+            chartImage.isHidden = false
+            countLabel.text = "\(trending.marketCapRank)"
+            if let url = URL(string: trending.small) {
+                ImageLoader.shared.downloadImage(url) { [weak self] result in
+                    switch result {
+                    case .success(let data):
+                        DispatchQueue.main.async {
+                            self?.image.image = UIImage(data: data)
+                        }
+                    case .failure(let failure):
+                        print(failure)
+                    }
+                }
             }
+            nameLabel.text = trending.symbol.uppercased()
+            totalMarketCapLabel.text = trending.data.marketCap.removeFirstAndFormatted()
             
-        case .trendings(let trending):
-            break
+            if let url = URL(string: trending.data.sparkline) {
+                DispatchQueue.global().async {
+                let image = UIView(svgURL: url) { [weak self] (svgLayer) in
+                        guard let strong = self else { return }
+                        svgLayer.fillColor = UIColor.clear.cgColor
+                        svgLayer.resizeToFit(strong.chartView.bounds)
+                    }
+                    DispatchQueue.main.async {
+                        self.chartImage.addSubview(image)
+                    }
+               }
+            }
+            priceLabel.text = trending.data.price.asCurrencyWith6Decimals()
+            if let data = trending.data.priceChangePercentage24H["usd"] {
+                priceChangeLabelConfigure(value: data)
+            }
+        }
+    }
+    private func priceChangeLabelConfigure(value: Double) {
+        if (value.description.contains("-")) {
+            priceChangeLabel.textColor = .systemRed
+            priceChangeLabel.text = "\(value.rounded(toDecimalPlaces: 2))%"
+        } else {
+            priceChangeLabel.textColor = .systemGreen
+            priceChangeLabel.text = "+\(value.rounded(toDecimalPlaces: 2))%"
         }
     }
     private func configureChartView(price: [Double],priceChange: Double){
