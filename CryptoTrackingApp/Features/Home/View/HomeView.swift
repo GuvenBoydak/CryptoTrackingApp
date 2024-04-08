@@ -12,24 +12,19 @@ import SnapKit
 final class HomeView: UIView {
     // MARK: - UIElements
     private let homeHeaderView = HomeHeaderView()
-    private let spinner: UIActivityIndicatorView = {
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.hidesWhenStopped = true
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        return spinner
-    }()
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.isHidden = true
         collectionView.alpha = 0
-        collectionView.register(HomeCoinAndTrendingCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(HomeCoinAndTrendingCollectionViewCell.self, forCellWithReuseIdentifier: HomeCoinAndTrendingCollectionViewCell.identitfier)
+        collectionView.register(HomeExchangeCollectionViewCell.self, forCellWithReuseIdentifier: HomeExchangeCollectionViewCell.identitifier)
         return collectionView
     }()
     private  let coinsButton: UIButton = {
         let button = UIButton()
-        button.setAttributedTitle(NSAttributedString(string: "Coin's",
+        button.setAttributedTitle(NSAttributedString(string: LocalizableKey.Home.coin.title,
                                                      attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                   .foregroundColor: UIColor.systemBlue]), for: .normal)
         button.addTarget(self, action: #selector(didTapCoinsButton), for: .touchUpInside)
@@ -42,7 +37,7 @@ final class HomeView: UIView {
     }()
     private  let trendingButton: UIButton = {
         let button = UIButton()
-        button.setAttributedTitle(NSAttributedString(string: "Trending",
+        button.setAttributedTitle(NSAttributedString(string: LocalizableKey.Home.trending.title,
                                                      attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                   .foregroundColor: UIColor.systemGray]), for: .normal)
         button.addTarget(self, action: #selector(didTapTrendingButton), for: .touchUpInside)
@@ -55,7 +50,7 @@ final class HomeView: UIView {
     }()
     private  let exchangeButton: UIButton = {
         let button = UIButton()
-        button.setAttributedTitle(NSAttributedString(string: "Exchange",
+        button.setAttributedTitle(NSAttributedString(string: LocalizableKey.Home.exchange.title,
                                                      attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                   .foregroundColor: UIColor.systemGray]), for: .normal)
         button.addTarget(self, action: #selector(didTapExchangeButton), for: .touchUpInside)
@@ -74,23 +69,28 @@ final class HomeView: UIView {
     }()
     private let nameLabel: UILabel = {
        let label = UILabel()
-        label.text = "Name"
+        label.text = LocalizableKey.Home.name.title
         label.font = .systemFont(ofSize: 12)
+        label.textAlignment = .center
         return label
     }()
     private let volumeLabel: UILabel = {
        let label = UILabel()
         label.text = "24s %"
         label.font = .systemFont(ofSize: 12)
+        label.textAlignment = .center
         return label
     }()
     private let priceLabel: UILabel = {
        let label = UILabel()
-        label.text = "Fiyat"
+        label.text = LocalizableKey.Home.price.title
         label.font = .systemFont(ofSize: 12)
+        label.textAlignment = .center
         return label
     }()
     var stackView: UIStackView!
+    var coinAndTrendingStackView: UIStackView!
+    
     // MARK: - Properties
     let homeVM = HomeViewModel()
     
@@ -111,7 +111,7 @@ extension HomeView {
     private func setup() {
         setupHeaderView()
         setupAddConstraint()
-        setupSpinerCollectionView()
+        setupCollectionView()
     }
     private func setupHeaderView() {
         addSubview(homeHeaderView)
@@ -121,19 +121,12 @@ extension HomeView {
             make.trailing.equalToSuperview().offset(-8)
         }
     }
-    private func setupSpinerCollectionView() {
+    private func setupCollectionView() {
         collectionView.delegate = homeVM
         collectionView.dataSource = homeVM
         collectionView.isHidden = false
         collectionView.alpha  = 1
-        spinner.startAnimating()
-        
-        addSubViews(spinner,collectionView)
-        spinner.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
-        }
-
+        addSubview(collectionView)
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(nameLabel.snp.bottom).offset(2)
             make.leading.equalTo(snp.leading).offset(8)
@@ -146,7 +139,7 @@ extension HomeView {
         coinStackView.axis = .vertical
         let trendingStackView = UIStackView(arrangedSubviews: [trendingButton,trendingBarView])
         trendingStackView.axis = .vertical
-        let exchangeStakView = UIStackView(arrangedSubviews: [exchangeButton,exchangeBarView])
+        var exchangeStakView = UIStackView(arrangedSubviews: [exchangeButton,exchangeBarView])
         exchangeStakView.axis = .vertical
         
         stackView = UIStackView(arrangedSubviews: [coinStackView,trendingStackView,exchangeStakView])
@@ -154,11 +147,16 @@ extension HomeView {
         stackView.spacing = 8
         stackView.distribution = .fillEqually
         
+        coinAndTrendingStackView = UIStackView(arrangedSubviews: [marketRankLabel,nameLabel,volumeLabel,priceLabel])
+        coinAndTrendingStackView.spacing = 8
+    
         addSubViews(stackView,
-                    marketRankLabel,
-                    nameLabel,
-                    volumeLabel,
-                    priceLabel)
+        coinAndTrendingStackView)
+        coinAndTrendingStackView.snp.makeConstraints { make in
+            make.top.equalTo(stackView.snp.bottom).offset(10)
+            make.leading.equalToSuperview().offset(12)
+            make.trailing.equalToSuperview().offset(-8)
+        }
         stackView.snp.makeConstraints { make in
             make.top.equalTo(homeHeaderView.marketCapView.snp.bottom).offset(8)
             make.leading.equalToSuperview().offset(8)
@@ -173,36 +171,59 @@ extension HomeView {
         exchangeBarView.snp.makeConstraints { make in
             make.height.equalTo(2)
         }
-        marketRankLabel.snp.makeConstraints { make in
-            make.top.equalTo(stackView.snp.bottom).offset(10)
-            make.leading.equalToSuperview().offset(12)
-        }
         nameLabel.snp.makeConstraints { make in
-            make.top.equalTo(stackView.snp.bottom).offset(10)
-            make.leading.equalTo(marketRankLabel.snp.trailing).offset(35)
+            make.width.equalTo(75)
         }
         volumeLabel.snp.makeConstraints { make in
-            make.top.equalTo(stackView.snp.bottom).offset(10)
-            make.leading.equalTo(nameLabel.snp.trailing).offset(80)
+            make.width.equalTo(165)
         }
-        priceLabel.snp.makeConstraints { make in
-            make.top.equalTo(stackView.snp.bottom).offset(10)
-            make.trailing.equalToSuperview().offset(-18)
+        marketRankLabel.snp.makeConstraints { make in
+            make.width.equalTo(40)
         }
+    }
+    private func setupExchangeStackView() {
+        volumeLabel.text = "Skor"
+        priceLabel.text = LocalizableKey.Home.volume.title
+        nameLabel.snp.remakeConstraints { make in
+            make.width.equalTo(125)
+        }
+        nameLabel.textAlignment = .right
+        volumeLabel.snp.remakeConstraints({ make in
+            make.width.equalTo(90)
+        })
+        volumeLabel.textAlignment = .right
+        priceLabel.font = .systemFont(ofSize: 11)
+    }
+    private func setupCoinAndTrendingStackView() {
+        volumeLabel.text = "24s %"
+        priceLabel.text = LocalizableKey.Home.price.title
+        nameLabel.textAlignment = .center
+        volumeLabel.textAlignment = .center
+        priceLabel.font = .systemFont(ofSize: 12)
+        nameLabel.snp.makeConstraints { make in
+            make.width.equalTo(75)
+        }
+        volumeLabel.snp.makeConstraints { make in
+            make.width.equalTo(165)
+        }
+        marketRankLabel.snp.makeConstraints { make in
+            make.width.equalTo(40)
+        }
+
     }
     private func setTitleColor(button: UIButton,color: UIColor) {
         if button == coinsButton {
-            button.setAttributedTitle(NSAttributedString(string: "Coin's",
+            button.setAttributedTitle(NSAttributedString(string: LocalizableKey.Home.coin.title,
                                                               attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                            .foregroundColor: color]), for: .normal)
             coinsBarView.backgroundColor = color
         } else if button == trendingButton {
-            button.setAttributedTitle(NSAttributedString(string: "Trending",
+            button.setAttributedTitle(NSAttributedString(string: LocalizableKey.Home.trending.title,
                                                                  attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                               .foregroundColor: color]), for: .normal)
             trendingBarView.backgroundColor = color
         } else if button == exchangeButton {
-            button.setAttributedTitle(NSAttributedString(string: "Exchange",
+            button.setAttributedTitle(NSAttributedString(string: LocalizableKey.Home.exchange.title,
                                                                  attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                               .foregroundColor: color]), for: .normal)
             exchangeBarView.backgroundColor = color
@@ -213,38 +234,42 @@ extension HomeView {
 extension HomeView {
     @objc private func didTapCoinsButton(_ sender: UIButton) {
         setTitleColor(button: sender, color: .systemBlue)
-        trendingButton.setAttributedTitle(NSAttributedString(string: "Trending",
+        trendingButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Home.coin.title,
                                                              attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                           .foregroundColor: UIColor.systemGray]), for: .normal)
         trendingBarView.backgroundColor = .lightGray
-        exchangeButton.setAttributedTitle(NSAttributedString(string: "Exchange",
+        exchangeButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Home.exchange.title,
                                                              attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                           .foregroundColor: UIColor.systemGray]), for: .normal)
         exchangeBarView.backgroundColor = .lightGray
         homeVM.callApi(requestType: .coin)
+        setupCoinAndTrendingStackView()
     }
     @objc private func didTapTrendingButton(_ sender: UIButton) {
         setTitleColor(button: sender, color: .systemBlue)
-        coinsButton.setAttributedTitle(NSAttributedString(string: "Coin's",
+        coinsButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Home.coin.title,
                                                              attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                           .foregroundColor: UIColor.systemGray]), for: .normal)
         coinsBarView.backgroundColor = .lightGray
-        exchangeButton.setAttributedTitle(NSAttributedString(string: "Exchange",
+        exchangeButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Home.exchange.title,
                                                              attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                           .foregroundColor: UIColor.systemGray]), for: .normal)
         exchangeBarView.backgroundColor = .lightGray
         homeVM.callApi(requestType: .trending)
+        setupCoinAndTrendingStackView()
     }
     @objc private func didTapExchangeButton(_ sender: UIButton) {
         setTitleColor(button: sender, color: .systemBlue)
-        coinsButton.setAttributedTitle(NSAttributedString(string: "Coin's",
+        coinsButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Home.coin.title,
                                                              attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                           .foregroundColor: UIColor.systemGray]), for: .normal)
         coinsBarView.backgroundColor = .lightGray
-        trendingButton.setAttributedTitle(NSAttributedString(string: "Trending",
+        trendingButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Home.trending.title,
                                                              attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                           .foregroundColor: UIColor.systemGray]), for: .normal)
         trendingBarView.backgroundColor = .lightGray
+        homeVM.callApi(requestType: .exchange)
+        setupExchangeStackView()
     }
 }
 // MARK: - HomeViewModelProtocol

@@ -16,8 +16,6 @@ final class HomeViewModel: NSObject {
     
     weak var delegate: HomeViewModelProtocol?
     var result: HomeResultType?
-    var isLoading = true
-    
 }
 // MARK: - Helpers
 extension HomeViewModel {
@@ -32,6 +30,7 @@ extension HomeViewModel {
             execute(TrendingResult.self, request: request)
         case .exchange:
             request = Request(endpoint: .exchange)
+            execute([Exchange].self, request: request)
         }
     }
     private func execute<T: Codable>(_ type: T.Type,request: Request?) {
@@ -51,6 +50,8 @@ extension HomeViewModel {
             result = .coins(coinResult)
         } else if let trendingResult = model as? TrendingResult {
             result = .trendings(trendingResult)
+        } else if let exchangeResult = model as? [Exchange] {
+            result = .exchange(exchangeResult)
         }
     }
 }
@@ -62,6 +63,8 @@ extension HomeViewModel: UICollectionViewDelegate,UICollectionViewDataSource,UIC
            return coins.count
         case .trendings(let trendings):
             return trendings.coins.count
+        case .exchange( let exchanges):
+            return exchanges.count
         case .none:
             return 0
         }
@@ -69,12 +72,16 @@ extension HomeViewModel: UICollectionViewDelegate,UICollectionViewDataSource,UIC
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch result {
         case .coins(let coins):
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! HomeCoinAndTrendingCollectionViewCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCoinAndTrendingCollectionViewCell.identitfier, for: indexPath) as! HomeCoinAndTrendingCollectionViewCell
             cell.configure(model: coins[indexPath.item])
             return cell
         case .trendings(let trendings):
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! HomeCoinAndTrendingCollectionViewCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCoinAndTrendingCollectionViewCell.identitfier, for: indexPath) as! HomeCoinAndTrendingCollectionViewCell
             cell.configure(model: trendings.coins[indexPath.item].item)
+            return cell
+        case .exchange(let exchanges):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeExchangeCollectionViewCell.identitifier, for: indexPath) as! HomeExchangeCollectionViewCell
+            cell.configure(model: exchanges[indexPath.item])
             return cell
         case .none:
             break

@@ -10,6 +10,7 @@ import DGCharts
 import SwiftSVG
 
 final class HomeCoinAndTrendingCollectionViewCell: UICollectionViewCell {
+    static let identitfier = "HomeCoinAndTrendingCollectionViewCell"
     // MARK: - UIElements
     private let countLabel: UILabel = {
         let label = UILabel()
@@ -49,7 +50,7 @@ final class HomeCoinAndTrendingCollectionViewCell: UICollectionViewCell {
         chartV.rightAxis.enabled = false
         return chartV
     }()
-    private let chartImage: UIImageView = {
+    private var chartImage: UIImageView = {
         let image = UIImageView()
         image.clipsToBounds = true
         image.layer.cornerRadius = 8
@@ -174,6 +175,7 @@ extension HomeCoinAndTrendingCollectionViewCell {
                         svgLayer.resizeToFit(strong.chartView.bounds)
                     }
                     DispatchQueue.main.async {
+                        self.chartImage.subviews.forEach { $0.removeFromSuperview() }
                         self.chartImage.addSubview(image)
                     }
                }
@@ -210,7 +212,6 @@ extension HomeCoinAndTrendingCollectionViewCell {
         } else {
             dataSet.fillColor = .systemGreen
         }
-        
         
         let data = LineChartData(dataSet: dataSet)
         chartView.data = data
