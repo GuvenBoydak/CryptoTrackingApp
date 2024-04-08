@@ -7,7 +7,16 @@
 */
 
 
+
 //MARK: Tabbar
-"Home" = "Home";
-"My Portfolio" = "My Portfolio";
-"Setting" = "Setting";
+"Home" = "Ana Sayfa";
+"My Portfolio" = "Portföy";
+"Setting" = "Ayarlar";
+
+//MARK: Home
+"Coin's" = "Coinler";
+"Trending" = "Trendler";
+"Exchange" = "Borsalar";
+"Name" = "İsim";
+"Price" = "Fiyat";
+"24s BTC Volume" = "24s BTC Hacim"

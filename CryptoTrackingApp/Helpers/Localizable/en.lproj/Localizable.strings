@@ -7,7 +7,14 @@
 */
 
 //MARK: Tabbar
-"Home" = "Ana Sayfa";
-"My Portfolio" = "Portföy";
-"Setting" = "Ayarlar";
+"Home" = "Home";
+"My Portfolio" = "My Portfolio";
+"Setting" = "Setting";
 
+//MARK: Home
+"Coin's" = "Coin's";
+"Trending" = "Trending";
+"Exchange" = "Exchange";
+"Name" = "Name";
+"Price" = "Price";
+"24s BTC Volume" = "24s BTC Volume"

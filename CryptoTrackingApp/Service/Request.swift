@@ -30,11 +30,11 @@ enum Endpoint {
     func urlString() -> String {
         switch self {
         case .coins(let page):
-            return "coins/markets?vs_currency=usd&order=market_cap_desc&per_page=\(page)&sparkline=true&price_change_percentage=24h"
+            return "coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=\(page)&sparkline=true&price_change_percentage=24h?"
         case .trending:
-            return "search/trending"
+            return "search/trending?"
         case .exchange:
-            return "exchanges"
+            return "exchanges?"
         }
     }
 }

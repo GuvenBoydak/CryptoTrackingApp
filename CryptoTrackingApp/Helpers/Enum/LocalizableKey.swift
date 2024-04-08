@@ -21,4 +21,19 @@ struct LocalizableKey {
             }
         }
     }
+    enum Home: String {
+        case coin = "Coin's"
+        case trending = "Trending"
+        case exchange = "Exchange"
+        case name = "Name"
+        case price = "Price"
+        case volume = "24s BTC Volume"
+        
+        var title: String {
+            switch self {
+            case .coin,.trending,.exchange,.name,.price,.volume:
+                rawValue.localized()
+            }
+        }
+    }
 }

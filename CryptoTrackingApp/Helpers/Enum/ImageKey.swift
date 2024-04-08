@@ -13,4 +13,7 @@ struct ImageKey {
         case portfolio = "wallet.pass"
         case setting = "gear.circle"
     }
+    enum Home: String {
+        case person = "person.circle"
+    }
 }
