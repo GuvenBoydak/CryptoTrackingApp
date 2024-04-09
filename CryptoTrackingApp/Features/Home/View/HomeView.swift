@@ -8,6 +8,9 @@
 import UIKit
 import SnapKit
 
+protocol HomeViewProtocol: AnyObject {
+    func didSelectedCoin(coin: Coin)
+}
 
 final class HomeView: UIView {
     // MARK: - UIElements
@@ -93,6 +96,7 @@ final class HomeView: UIView {
     
     // MARK: - Properties
     let homeVM = HomeViewModel()
+    weak var delegate: HomeViewProtocol?
     
     // MARK: - Life Cycle
     override init(frame: CGRect) {
@@ -274,6 +278,10 @@ extension HomeView {
 }
 // MARK: - HomeViewModelProtocol
 extension HomeView: HomeViewModelProtocol {
+    func didSelectedCoin(coin: Coin) {
+        delegate?.didSelectedCoin(coin: coin)
+    }
+    
     func didInitial() {
         DispatchQueue.main.async {
             self.collectionView.reloadData()

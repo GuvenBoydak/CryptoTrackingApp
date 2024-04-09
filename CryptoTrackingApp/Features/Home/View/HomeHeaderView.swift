@@ -22,7 +22,7 @@ final class HomeHeaderView: UIView {
     }()
     private let marketCapTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Market Cap"
+        label.text = LocalizableKey.HomeHeader.market.title
         label.textColor = .label
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         return label
@@ -45,7 +45,7 @@ final class HomeHeaderView: UIView {
     }()
     private let volumeTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "24h Volume"
+        label.text = LocalizableKey.HomeHeader.volume.title
         label.textColor = .label
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         return label
@@ -68,9 +68,9 @@ final class HomeHeaderView: UIView {
     }()
     private let dominanceTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "BTC Dominance"
+        label.text = LocalizableKey.HomeHeader.dominance.title
         label.textColor = .label
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 11, weight: .medium)
         return label
     }()
     private let dominanceValueLabel: UILabel = {
@@ -83,14 +83,17 @@ final class HomeHeaderView: UIView {
 
     var stackView: UIStackView!
     // MARK: - Properties
-    
+    let homeHeaderVM = HomeHeaderViewModel()
 
-    
-    
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
+        homeHeaderVM.fetchMarketData() { [weak self] model in
+            DispatchQueue.main.async {
+                self?.configure(model: model)
+            }
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -146,6 +149,17 @@ extension HomeHeaderView {
             make.top.equalTo(dominanceTitleLabel.snp.bottom).offset(6)
             make.centerX.equalTo(dominanceTitleLabel.snp.centerX)
         }
+    }
+    private func configure(model: MarketData?) {
+        guard let data = model,
+        let marketCap = data.totalMarketCap["usd"],
+        let totalVolume = data.totalVolume["usd"],
+        let dominance = data.marketCapPercentage["btc"] else {
+            return
+        }
+        marketCapValueLabel.text = marketCap.formattedWithAbbreviations()
+        volumeValueLabel.text = totalVolume.formattedWithAbbreviations()
+        dominanceValueLabel.text = "% \(dominance.rounded(toDecimalPlaces: 1))"
     }
 }
 

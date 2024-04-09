@@ -10,6 +10,7 @@ import UIKit
 
 protocol HomeViewModelProtocol: AnyObject {
     func didInitial()
+    func didSelectedCoin(coin: Coin)
 }
 
 final class HomeViewModel: NSObject {
@@ -93,5 +94,19 @@ extension HomeViewModel: UICollectionViewDelegate,UICollectionViewDataSource,UIC
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         1
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        switch result {
+        case .coins(let coins):
+            delegate?.didSelectedCoin(coin: coins[indexPath.item])
+            break
+        case .trendings(let trendings):
+            break
+        case .exchange(let exchanges):
+            break
+        case .none:
+            break
+        }
     }
 }

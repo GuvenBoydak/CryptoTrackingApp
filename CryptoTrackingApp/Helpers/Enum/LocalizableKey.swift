@@ -36,4 +36,16 @@ struct LocalizableKey {
             }
         }
     }
+    enum HomeHeader: String {
+        case market = "Market Cap"
+        case volume = "24s Volume"
+        case dominance = "BTC Dominance"
+        
+        var title: String {
+            switch self {
+            case .market,.volume,.dominance:
+                rawValue.localized()
+            }
+        }
+    }
 }

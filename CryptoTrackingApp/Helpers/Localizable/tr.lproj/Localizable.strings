@@ -6,17 +6,20 @@
   
 */
 
+// MARK: - Tabbar
+"Home" = "Home";
+"My Portfolio" = "My Portfolio";
+"Setting" = "Setting";
 
+// MARK: - Home
+"Coin's" = "Coin's";
+"Trending" = "Trending";
+"Exchange" = "Exchange";
+"Name" = "Name";
+"Price" = "Price";
+"24s BTC Volume" = "24s BTC Volume";
 
-//MARK: Tabbar
-"Home" = "Ana Sayfa";
-"My Portfolio" = "Portföy";
-"Setting" = "Ayarlar";
-
-//MARK: Home
-"Coin's" = "Coinler";
-"Trending" = "Trendler";
-"Exchange" = "Borsalar";
-"Name" = "İsim";
-"Price" = "Fiyat";
-"24s BTC Volume" = "24s BTC Hacim"
+// MARK: - HomeHeader
+"Market Cap" = "Market Cap"
+"24s Volume" = "24s Volume"
+"BTC Dominance" = "BTC Dominance"
