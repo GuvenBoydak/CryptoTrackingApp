@@ -16,4 +16,7 @@ struct ImageKey {
     enum Home: String {
         case person = "person.circle"
     }
+    enum Portfolio: String {
+        case addAsset = "plus.app"
+    }
 }

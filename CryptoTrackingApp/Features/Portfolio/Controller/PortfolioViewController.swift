@@ -22,6 +22,7 @@ final class PortfolioViewController: UIViewController {
 extension PortfolioViewController {
     private func setup() {
         view.backgroundColor = .systemBackground
+        title = LocalizableKey.Portfolio.myPortfolio.title
         addConstraint()
     }
     private func addConstraint() {

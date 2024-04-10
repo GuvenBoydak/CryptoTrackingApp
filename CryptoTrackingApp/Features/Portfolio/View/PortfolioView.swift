@@ -21,7 +21,7 @@ final class PortfolioView: UIView {
     }()
     private let totalTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Total :"
+        label.text = LocalizableKey.Portfolio.total.title
         label.font = .systemFont(ofSize: 16,weight: .regular)
         return label
     }()
@@ -33,13 +33,13 @@ final class PortfolioView: UIView {
     }()
     private  let addAssetButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "plus.app"), for: .normal)
+        button.setImage(UIImage(systemName: ImageKey.Portfolio.addAsset.rawValue), for: .normal)
         button.addTarget(self, action: #selector(didTapAddAssetButton), for: .touchUpInside)
         return button
     }()
     private  let currentAssetButton: UIButton = {
         let button = UIButton()
-        button.setAttributedTitle(NSAttributedString(string: "Current asset",
+        button.setAttributedTitle(NSAttributedString(string: LocalizableKey.Portfolio.currentAsset.title,
                                                      attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                   .foregroundColor: UIColor.systemBlue]), for: .normal)
        button.addTarget(self, action: #selector(didTapCurrentAssetButton), for: .touchUpInside)
@@ -47,7 +47,7 @@ final class PortfolioView: UIView {
     }()
     private  let activityButton: UIButton = {
         let button = UIButton()
-        button.setAttributedTitle(NSAttributedString(string: "Activity",
+        button.setAttributedTitle(NSAttributedString(string: LocalizableKey.Portfolio.activity.title,
                                                      attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                   .foregroundColor: UIColor.systemGray]), for: .normal)
        button.addTarget(self, action: #selector(didTapActivityButton), for: .touchUpInside)
@@ -55,19 +55,19 @@ final class PortfolioView: UIView {
     }()
     private let assetTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Asset"
+        label.text = LocalizableKey.Portfolio.asset.title
         label.font = .systemFont(ofSize: 18,weight: .medium)
         return label
     }()
     private let priceTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Fiyat"
+        label.text = LocalizableKey.Portfolio.price.title
         label.font = .systemFont(ofSize: 18,weight: .medium)
         return label
     }()
     private let pieceCoinTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Adet"
+        label.text = LocalizableKey.Portfolio.piece.title
         label.font = .systemFont(ofSize: 18,weight: .medium)
         return label
     }()
@@ -148,22 +148,22 @@ extension PortfolioView {
     @objc
     private func didTapCurrentAssetButton(){
         activityButton.tintColor = .systemGray
-        activityButton.setAttributedTitle(NSAttributedString(string: "Activity",
+        activityButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Portfolio.activity.title,
                                                      attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                   .foregroundColor: UIColor.systemGray]), for: .normal)
         currentAssetButton.tintColor = .systemBlue
-        currentAssetButton.setAttributedTitle(NSAttributedString(string: "Current Asset",
+        currentAssetButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Portfolio.currentAsset.title,
                                                      attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                   .foregroundColor: UIColor.systemBlue]), for: .normal)
     }
     @objc
     private func didTapActivityButton(){
         currentAssetButton.tintColor = .systemGray
-        currentAssetButton.setAttributedTitle(NSAttributedString(string: "Current Asset",
+        currentAssetButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Portfolio.currentAsset.title,
                                                      attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                   .foregroundColor: UIColor.systemGray]), for: .normal)
         activityButton.tintColor = .systemBlue
-        activityButton.setAttributedTitle(NSAttributedString(string: "Activity",
+        activityButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Portfolio.activity.title,
                                                      attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                   .foregroundColor: UIColor.systemBlue]), for: .normal)
     }

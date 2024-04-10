@@ -48,4 +48,20 @@ struct LocalizableKey {
             }
         }
     }
+    enum Portfolio: String {
+        case myPortfolio = "MY Portfolio"
+        case total = "Total :"
+        case currentAsset = "Current Asset"
+        case activity = "Activity"
+        case asset = "Asset"
+        case price = "Price"
+        case piece = "Piece"
+        
+        var title: String {
+            switch self {
+            case .myPortfolio,.total,.currentAsset,.activity,.asset,.price,.piece:
+                rawValue.localized()
+            }
+        }
+    }
 }

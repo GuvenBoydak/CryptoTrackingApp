@@ -6,20 +6,29 @@
   
 */
 
-// MARK: - Tabbar
-"Home" = "Home";
-"My Portfolio" = "My Portfolio";
-"Setting" = "Setting";
+//MARK: Tabbar
+"Home" = "Ana Sayfa";
+"My Portfolio" = "Portföy";
+"Setting" = "Ayarlar";
 
-// MARK: - Home
-"Coin's" = "Coin's";
-"Trending" = "Trending";
-"Exchange" = "Exchange";
-"Name" = "Name";
-"Price" = "Price";
-"24s BTC Volume" = "24s BTC Volume";
+//MARK: Home
+"Coin's" = "Coinler";
+"Trending" = "Trendler";
+"Exchange" = "Borsalar";
+"Name" = "İsim";
+"Price" = "Fiyat";
+"24s BTC Volume" = "24s BTC Hacim";
 
 // MARK: - HomeHeader
-"Market Cap" = "Market Cap"
-"24s Volume" = "24s Volume"
-"BTC Dominance" = "BTC Dominance"
+"Market Cap" = "Piyasa Hacim";
+"24s Volume" = "24s Hacim";
+"BTC Dominance" = "Piyasa Hakimiyeti";
+
+// MARK: - Portfolio
+"MY Portfolio" = "Portföy";
+"Total :" = "Toplam :";
+"Current Asset" = "Güncel Varlık";
+"Activity" = "İşlemler";
+"Asset" = "Varlık";
+"Price" = "Fiyat";
+"Piece" = "Adet";
