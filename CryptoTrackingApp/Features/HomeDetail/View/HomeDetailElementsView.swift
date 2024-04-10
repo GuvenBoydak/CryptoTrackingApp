@@ -10,6 +10,12 @@ import DGCharts
 
 class HomeDetailElementsView: UIView {
     // MARK: - UIElements
+    private let containerView: UIView = {
+       let view = UIView()
+        view.backgroundColor = .tertiarySystemFill
+        view.layer.cornerRadius = 8
+        return view
+    }()
     private let image: UIImageView = {
         let image = UIImageView()
         image.image = UIImage(systemName: ImageKey.Home.person.rawValue)
@@ -17,32 +23,32 @@ class HomeDetailElementsView: UIView {
         image.clipsToBounds = true
         return image
     }()
-    private let marketCapTitle: UILabel = {
-       let label = UILabel()
-        label.text = "Market Cap"
-        label.font = .systemFont(ofSize: 14,weight: .medium)
+    private let nameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Bitcoin "
+        label.font = .systemFont(ofSize: 18,weight: .medium)
         return label
     }()
-    private let marketCapValueLabel: UILabel = {
-       let label = UILabel()
-        label.text = "1,40 T"
-        label.font = .systemFont(ofSize: 14,weight: .regular)
+    private let shortNameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "BTC"
+        label.font = .systemFont(ofSize: 15,weight: .medium)
         label.textAlignment = .center
         return label
     }()
-    private let nameLabel: UILabel = {
-       let label = UILabel()
-        label.text = "Bitcoin #1"
-        label.font = .systemFont(ofSize: 15,weight: .medium)
-        label.textAlignment = .left
-        return label
-    }()
     private let priceLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.text = "$ 66,680"
         label.font = .systemFont(ofSize: 18,weight: .medium)
         label.textColor = .systemGreen
-        label.textAlignment = .left
+        label.textAlignment = .center
+        return label
+    }()
+    private let priceChangeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "+2,53%"
+        label.font = .systemFont(ofSize: 14,weight: .regular)
+        label.textAlignment = .center
         return label
     }()
     let chartView: LineChartView = {
@@ -53,30 +59,16 @@ class HomeDetailElementsView: UIView {
         chartV.drawGridBackgroundEnabled = false
         chartV.leftAxis.enabled = false
         chartV.rightAxis.enabled = false
-        chartV.backgroundColor = .red
         return chartV
     }()
-    private let priceTitleLabel: UILabel = {
-       let label = UILabel()
-        label.text = "Price"
-        label.font = .systemFont(ofSize: 15,weight: .heavy)
-        return label
-    }()
-    private let priceChangeView = PriceChangeView()
     private let statisticTitleLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.text = "Statistic"
-        label.font = .systemFont(ofSize: 15,weight: .heavy)
+        label.font = .systemFont(ofSize: 18,weight: .heavy)
         return label
     }()
     private let statisticView = StatisticView()
-    private let aboutTitleLabel: UILabel = {
-       let label = UILabel()
-        label.text = "About"
-        label.font = .systemFont(ofSize: 15,weight: .heavy)
-        return label
-    }()
-
+    
     // MARK: - Properties
     
     // MARK: - Life Cycle
@@ -87,7 +79,7 @@ class HomeDetailElementsView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
 }
 // MARK: - Helpers
 extension HomeDetailElementsView {
@@ -95,29 +87,28 @@ extension HomeDetailElementsView {
         addConstraint()
     }
     private func addConstraint() {
-        priceChangeView.backgroundColor = .tertiarySystemFill
-        priceChangeView.layer.cornerRadius = 8
         statisticView.backgroundColor = .tertiarySystemFill
         statisticView.layer.cornerRadius = 8
-        let marketCapStackView = UIStackView(arrangedSubviews: [marketCapTitle,marketCapValueLabel])
-        marketCapStackView.axis = .vertical
-        marketCapStackView.spacing = 4
-        let namePriceStackView = UIStackView(arrangedSubviews: [nameLabel,priceLabel])
-        namePriceStackView.axis = .vertical
-        namePriceStackView.spacing = 4
-        let marketAndNameStackView = UIStackView(arrangedSubviews: [marketCapStackView,namePriceStackView])
+        let nameStackView = UIStackView(arrangedSubviews: [nameLabel,shortNameLabel])
+        nameStackView.axis = .vertical
+        nameStackView.spacing = -18
+        let priceStackView = UIStackView(arrangedSubviews: [priceLabel,priceChangeLabel])
+        priceStackView.axis = .vertical
+        priceStackView.spacing = -18
+        let marketAndNameStackView = UIStackView(arrangedSubviews: [nameStackView,priceStackView])
         marketAndNameStackView.axis = .horizontal
         marketAndNameStackView.distribution = .equalSpacing
         let headerStackView = UIStackView(arrangedSubviews: [image,marketAndNameStackView])
         headerStackView.axis = .horizontal
-        headerStackView.spacing = 12
-        let bodystackView = UIStackView(arrangedSubviews: [chartView,priceTitleLabel,priceChangeView,statisticTitleLabel,statisticView,aboutTitleLabel])
+        headerStackView.spacing = 20
+        containerView.addSubview(headerStackView)
+        let bodystackView = UIStackView(arrangedSubviews: [chartView,statisticTitleLabel,statisticView])
         bodystackView.axis = .vertical
         bodystackView.spacing = 10
-        let stackView = UIStackView(arrangedSubviews: [headerStackView,bodystackView])
+        let stackView = UIStackView(arrangedSubviews: [containerView,bodystackView])
         stackView.axis = .vertical
         stackView.spacing = 10
-        
+
         addSubview(stackView)
         stackView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(4)
@@ -125,19 +116,44 @@ extension HomeDetailElementsView {
             make.trailing.equalToSuperview()
             make.bottom.equalToSuperview().offset(-4)
         }
+        headerStackView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(4)
+            make.leading.equalToSuperview().offset(6)
+            make.trailing.equalToSuperview().offset(-6)
+            make.bottom.equalToSuperview().offset(-4)
+        }
+        nameLabel.snp.makeConstraints { make in
+            make.height.equalTo(shortNameLabel.snp.height)
+        }
+        shortNameLabel.snp.makeConstraints { make in
+            make.height.equalTo(nameLabel.snp.height)
+        }
+        priceLabel.snp.makeConstraints { make in
+            make.height.equalTo(priceChangeLabel.snp.height)
+        }
+        priceChangeLabel.snp.makeConstraints { make in
+            make.height.equalTo(priceLabel.snp.height)
+        }
         image.snp.makeConstraints { make in
-            make.height.greaterThanOrEqualTo(50)
-            make.width.greaterThanOrEqualTo(50)
+            make.height.lessThanOrEqualTo(65)
+            make.width.lessThanOrEqualTo(65)
         }
         chartView.snp.makeConstraints { make in
-            make.height.greaterThanOrEqualTo(160)
+            make.height.greaterThanOrEqualTo(220)
         }
     }
-    func configure(model: CoinDetail) {
-      statisticView.configure(model: model)
-        priceChangeView.configure(model: model)
-        if let url = URL(string: model.image.small){
-          // let sparklineData = model.sparklineIn7D {
+    func configure(model: Coin) {
+        statisticView.configure(model: model)
+        nameLabel.text = "\(model.name) #\(model.marketCapRank)"
+        shortNameLabel.text = model.symbol.uppercased()
+        priceLabel.text = "$\(model.currentPrice.rounded(toDecimalPlaces: 2))"
+        priceChangeLabel.text = "\(model.priceChangePercentage24H.rounded(toDecimalPlaces: 2))%"
+        if model.priceChangePercentage24H.description.contains("-") {
+            priceChangeLabel.textColor = .systemRed
+        } else {
+            priceChangeLabel.textColor = .systemGreen
+        }
+        if let url = URL(string: model.image){
             ImageLoader.shared.downloadImage(url) { [weak self] result in
                 switch result {
                 case .success(let data):
@@ -147,12 +163,9 @@ extension HomeDetailElementsView {
                 case .failure(let failure):
                     print(failure)
                 }
-           }
-          //  configureChartView(price: sparklineData.price, priceChange: model.marketData.priceChange24H)
+            }
+            configureChartView(price: model.sparklineIn7D.price, priceChange: model.priceChangePercentage24H)
         }
-        marketCapValueLabel.text = model.marketData.marketCap["usd"]?.formattedWithAbbreviations()
-        nameLabel.text = "\(model.name) #\(model.marketCapRank)"
-        priceLabel.text = model.marketData.currentPrice["usd"]?.rounded(toDecimalPlaces: 2)
     }
     private func configureChartView(price: [Double],priceChange: Double){
         var entries = [ChartDataEntry]()

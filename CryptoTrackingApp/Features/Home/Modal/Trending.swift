@@ -29,7 +29,7 @@ struct TrendingCoin: Codable {
         case name, symbol
         case marketCapRank = "market_cap_rank"
         case small
-        case  data
+        case data
     }
 }
 

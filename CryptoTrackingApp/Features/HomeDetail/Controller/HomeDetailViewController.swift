@@ -6,24 +6,38 @@
 //
 
 import UIKit
+import SnapKit
 
 class HomeDetailViewController: UIViewController {
-
+    private let coin: Coin
+    private let homeDetailView: HomeDetailView
+    
+    init(coin: Coin) {
+        self.coin = coin
+        homeDetailView = HomeDetailView(frame: .zero,coin: coin)
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        setup()
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+}
+// MARK: - Helpers
+extension HomeDetailViewController {
+    private func setup() {
+        view.backgroundColor = .systemBackground
+        title = coin.name.uppercased()
+        addConstraint()
     }
-    */
-
+    private func addConstraint() {
+        view.addSubview(homeDetailView)
+        homeDetailView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
+            make.leading.equalTo(view.snp.leading).offset(10)
+            make.trailing.equalTo(view.snp.trailing).offset(-10)
+        }
+    }
 }

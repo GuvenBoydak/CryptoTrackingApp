@@ -13,79 +13,79 @@ class StatisticView: UIView {
     private let marketCapLabel: UILabel = {
        let label = UILabel()
         label.text = "Piyasa deger"
-        label.font = .systemFont(ofSize: 14,weight: .medium)
+        label.font = .systemFont(ofSize: 18,weight: .medium)
         return label
     }()
     private let marketCapValueLabel: UILabel = {
        let label = UILabel()
         label.text = "11,354"
-        label.font = .systemFont(ofSize: 14,weight: .medium)
+        label.font = .systemFont(ofSize: 16,weight: .regular)
         label.textColor = .darkGray
         return label
     }()
     private let athTitleLabel: UILabel = {
        let label = UILabel()
         label.text = "En Yüksek"
-        label.font = .systemFont(ofSize: 14,weight: .medium)
+        label.font = .systemFont(ofSize: 18,weight: .medium)
         return label
     }()
     private let athValueLabel: UILabel = {
        let label = UILabel()
         label.text = "73,500"
         label.textColor = .darkGray
-        label.font = .systemFont(ofSize: 14,weight: .medium)
+        label.font = .systemFont(ofSize: 16,weight: .regular)
         return label
     }()
     private let lowestTitleLabel: UILabel = {
        let label = UILabel()
         label.text = "EnDüşük"
-        label.font = .systemFont(ofSize: 14,weight: .medium)
+        label.font = .systemFont(ofSize: 18,weight: .medium)
         return label
     }()
     private let lowestValueLabel: UILabel = {
        let label = UILabel()
-        label.text = "0,00054"
+        label.text = "$0,00054"
         label.textColor = .darkGray
-        label.font = .systemFont(ofSize: 14,weight: .medium)
+        label.font = .systemFont(ofSize: 16,weight: .regular)
+        return label
+    }()
+    private let totalVolumeTitleLabel: UILabel = {
+       let label = UILabel()
+        label.text = "Total Hacim"
+        label.font = .systemFont(ofSize: 18,weight: .medium)
+        return label
+    }()
+    private let totalVolumeValueLabel: UILabel = {
+       let label = UILabel()
+        label.text = "24,00"
+        label.textColor = .darkGray
+        label.font = .systemFont(ofSize: 16,weight: .regular)
         return label
     }()
     private let totalSupplyTitleLabel: UILabel = {
        let label = UILabel()
         label.text = "Total Arz"
-        label.font = .systemFont(ofSize: 14,weight: .medium)
+        label.font = .systemFont(ofSize: 18,weight: .medium)
         return label
     }()
     private let totalSupplyValueLabel: UILabel = {
        let label = UILabel()
         label.text = "21.67"
         label.textColor = .darkGray
-        label.font = .systemFont(ofSize: 14,weight: .medium)
+        label.font = .systemFont(ofSize: 16,weight: .regular)
         return label
     }()
     private let circulatingSupplyTitleLabel: UILabel = {
        let label = UILabel()
         label.text = "Dolaşımdaki arz"
-        label.font = .systemFont(ofSize: 14,weight: .medium)
+        label.font = .systemFont(ofSize: 18,weight: .medium)
         return label
     }()
     private let circulatingSupplyValueLabel: UILabel = {
        let label = UILabel()
         label.text = "21,67"
         label.textColor = .darkGray
-        label.font = .systemFont(ofSize: 14,weight: .medium)
-        return label
-    }()
-    private let maxSupplyTitleLabel: UILabel = {
-       let label = UILabel()
-        label.text = "Max aRz"
-        label.font = .systemFont(ofSize: 14,weight: .medium)
-        return label
-    }()
-    private let maxSupplyValueLabel: UILabel = {
-       let label = UILabel()
-        label.text = "24,00"
-        label.textColor = .darkGray
-        label.font = .systemFont(ofSize: 14,weight: .medium)
+        label.font = .systemFont(ofSize: 16,weight: .regular)
         return label
     }()
     // MARK: - Properties
@@ -110,8 +110,7 @@ extension StatisticView {
                                             [marketCapLabel,marketCapValueLabel,UIView(),athTitleLabel,athValueLabel,UIView(),lowestTitleLabel,lowestValueLabel])
         firsStackView.axis = .vertical
         firsStackView.spacing = 4
-        let secondStackView = UIStackView(arrangedSubviews: [totalSupplyTitleLabel,totalSupplyValueLabel,UIView(),circulatingSupplyTitleLabel,circulatingSupplyValueLabel,
-                                                             UIView(),maxSupplyTitleLabel,maxSupplyValueLabel])
+        let secondStackView = UIStackView(arrangedSubviews: [totalVolumeTitleLabel,totalVolumeValueLabel,UIView(),totalSupplyTitleLabel,totalSupplyValueLabel,UIView(),circulatingSupplyTitleLabel,circulatingSupplyValueLabel])
         secondStackView.axis = .vertical
         secondStackView.spacing = 4
         let stackView = UIStackView(arrangedSubviews: [firsStackView,UIView(),secondStackView])
@@ -126,11 +125,15 @@ extension StatisticView {
             make.bottom.equalToSuperview().offset(-8)
         }
     }
-    func configure(model: CoinDetail) {
-        marketCapValueLabel.text = model.marketData.marketCap["usd"]?.formattedWithAbbreviations()
-        athValueLabel.text = model.marketData.ath["usd"]?.asCurrencyWith6Decimals()
-        totalSupplyValueLabel.text = "\(model.marketData.totalSupply.formattedWithAbbreviations()) BTC"
-        circulatingSupplyValueLabel.text = "\(model.marketData.circulatingSupply.formattedWithAbbreviations()) BTC"
-        maxSupplyValueLabel.text = "\(model.marketData.maxSupply.formattedWithAbbreviations()) BTC"
+    func configure(model: Coin) {
+        guard let totalSupply = model.totalSupply
+            else { return }
+        marketCapValueLabel.text = model.marketCap.formattedWithAbbreviations()
+        athValueLabel.text = "$\(model.ath.rounded(toDecimalPlaces: 2))"
+        lowestValueLabel.text = model.atl.asCurrencyWith6Decimals()
+        totalVolumeValueLabel.text = model.totalVolume.formattedWithAbbreviations()
+        totalSupplyValueLabel.text = "\(totalSupply.formattedWithAbbreviations().removeFirst(value: "$")) \(model.symbol.uppercased())"
+        circulatingSupplyValueLabel.text = "\(model.circulatingSupply.formattedWithAbbreviations().removeFirst(value: "$")) \(model.symbol.uppercased())"
+
     }
 }

@@ -17,7 +17,7 @@ struct Coin: Codable {
     let high24H, low24H,priceChangePercentage24H: Double
     let marketCapChange24H, marketCapChangePercentage24H, circulatingSupply: Double
     let totalSupply, maxSupply: Double?
-    let ath, athChangePercentage: Double
+    let ath, atl, athChangePercentage: Double
     let athDate: String
     let sparklineIn7D: SparklineIn7D
 
@@ -35,7 +35,7 @@ struct Coin: Codable {
         case circulatingSupply = "circulating_supply"
         case totalSupply = "total_supply"
         case maxSupply = "max_supply"
-        case ath
+        case ath, atl
         case athChangePercentage = "ath_change_percentage"
         case athDate = "ath_date"
         case sparklineIn7D = "sparkline_in_7d"
