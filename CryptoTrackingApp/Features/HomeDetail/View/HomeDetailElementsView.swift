@@ -8,7 +8,7 @@
 import UIKit
 import DGCharts
 
-class HomeDetailElementsView: UIView {
+final class HomeDetailElementsView: UIView {
     // MARK: - UIElements
     private let containerView: UIView = {
        let view = UIView()

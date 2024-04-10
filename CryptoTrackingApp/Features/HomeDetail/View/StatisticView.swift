@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class StatisticView: UIView {
+final class StatisticView: UIView {
     // MARK: - UIElements
     private let marketCapLabel: UILabel = {
        let label = UILabel()

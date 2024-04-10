@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class HomeDetailView: UIView {
+final class HomeDetailView: UIView {
     // MARK: - UIElements
     private let homeDetailElemementsView = HomeDetailElementsView()
     

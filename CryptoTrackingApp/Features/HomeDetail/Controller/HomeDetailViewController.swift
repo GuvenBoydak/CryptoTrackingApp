@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class HomeDetailViewController: UIViewController {
+final class HomeDetailViewController: UIViewController {
     private let coin: Coin
     private let homeDetailView: HomeDetailView
     

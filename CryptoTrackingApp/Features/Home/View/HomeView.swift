@@ -19,8 +19,6 @@ final class HomeView: UIView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.isHidden = true
-        collectionView.alpha = 0
         collectionView.register(HomeCoinAndTrendingCollectionViewCell.self, forCellWithReuseIdentifier: HomeCoinAndTrendingCollectionViewCell.identitfier)
         collectionView.register(HomeExchangeCollectionViewCell.self, forCellWithReuseIdentifier: HomeExchangeCollectionViewCell.identitifier)
         return collectionView
@@ -128,8 +126,6 @@ extension HomeView {
     private func setupCollectionView() {
         collectionView.delegate = homeVM
         collectionView.dataSource = homeVM
-        collectionView.isHidden = false
-        collectionView.alpha  = 1
         addSubview(collectionView)
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(nameLabel.snp.bottom).offset(2)
