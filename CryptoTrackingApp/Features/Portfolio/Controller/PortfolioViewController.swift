@@ -21,6 +21,7 @@ final class PortfolioViewController: UIViewController {
 // MARK: - Helpers
 extension PortfolioViewController {
     private func setup() {
+        portfolioView.delegate = self
         view.backgroundColor = .systemBackground
         title = LocalizableKey.Portfolio.myPortfolio.title
         addConstraint()
@@ -33,5 +34,13 @@ extension PortfolioViewController {
             make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing).offset(-12)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(8)
         }
+    }
+}
+// MARK: - PortfolioViewProtocol
+extension PortfolioViewController: PortfolioViewProtocol {
+    func didTapAddAsset() {
+        let searchVC = SearchViewController()
+        searchVC.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(searchVC, animated: true)
     }
 }

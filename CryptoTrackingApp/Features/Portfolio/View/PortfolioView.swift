@@ -8,6 +8,10 @@
 import UIKit
 import SnapKit
 
+protocol PortfolioViewProtocol: AnyObject {
+    func didTapAddAsset()
+}
+
 final class PortfolioView: UIView {
     // MARK: - UIElements
     private let headerContainer: UIView = {
@@ -81,6 +85,7 @@ final class PortfolioView: UIView {
     private var stackView: UIStackView!
     // MARK: - Properties
     private let portfolioVM = PortfolioViewModel()
+    weak var delegate: PortfolioViewProtocol?
     
     // MARK: - Life Cycle
     override init(frame: CGRect) {
@@ -169,6 +174,6 @@ extension PortfolioView {
     }
     @objc
     private func didTapAddAssetButton() {
-        
+        delegate?.didTapAddAsset()
     }
 }

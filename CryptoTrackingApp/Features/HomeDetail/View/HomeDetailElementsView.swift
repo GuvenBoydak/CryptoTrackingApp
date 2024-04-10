@@ -18,7 +18,6 @@ final class HomeDetailElementsView: UIView {
     }()
     private let image: UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(systemName: ImageKey.Home.person.rawValue)
         image.contentMode = .scaleAspectFill
         image.clipsToBounds = true
         return image
