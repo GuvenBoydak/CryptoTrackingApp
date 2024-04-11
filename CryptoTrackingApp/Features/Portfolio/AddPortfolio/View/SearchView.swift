@@ -8,6 +8,9 @@
 import UIKit
 import SnapKit
 
+protocol SearchViewProtocol: AnyObject {
+    func didSelectedCoin(coin: Coin)
+}
 
 final class SearchView: UIView {
     // MARK: - UIElements
@@ -29,7 +32,7 @@ final class SearchView: UIView {
     }()
     // MARK: - Properties
     private let searchVM = SearchViewModel()
-    
+    weak var delegate: SearchViewProtocol?
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -76,6 +79,9 @@ extension SearchView: UISearchBarDelegate {
 }
 //MARK: - UISearchBarDelegate
 extension SearchView: SearchViewModelProtocol {
+    func didSelectedCoin(coin: Coin) {
+        delegate?.didSelectedCoin(coin: coin)
+    }
     func didReloadData() {
         DispatchQueue.main.async {
             self.tableview.reloadData()

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SearchTableViewCell: UITableViewCell {
+final class SearchTableViewCell: UITableViewCell {
     static let identitifier = "SearchTableViewCell"
     // MARK: - UIElements
     private let image: UIImageView = {

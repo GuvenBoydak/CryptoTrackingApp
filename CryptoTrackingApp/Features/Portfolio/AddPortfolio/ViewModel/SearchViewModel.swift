@@ -9,6 +9,7 @@ import UIKit
 
 protocol SearchViewModelProtocol: AnyObject {
     func didReloadData()
+    func didSelectedCoin(coin: Coin)
 }
 
 final class SearchViewModel: NSObject {
@@ -54,6 +55,11 @@ extension SearchViewModel: UITableViewDelegate,UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableViewCell.identitifier, for: indexPath) as! SearchTableViewCell
         cell.configure(model: searchedCoins[indexPath.row])
         return cell
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let selectedCoin = searchedCoins[indexPath.row]
+        delegate?.didSelectedCoin(coin: selectedCoin)
     }
 }
 

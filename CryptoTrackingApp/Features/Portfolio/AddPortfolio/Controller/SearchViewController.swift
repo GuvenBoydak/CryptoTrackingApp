@@ -20,6 +20,7 @@ final class SearchViewController: UIViewController {
 // MARK: - Helpers
 extension SearchViewController {
     private func setup() {
+        searchView.delegate = self
         view.backgroundColor = .systemBackground
         addConstraint()
     }
@@ -31,5 +32,13 @@ extension SearchViewController {
             make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
+    }
+}
+// MARK: - SearchViewProtocol
+extension SearchViewController: SearchViewProtocol {
+    func didSelectedCoin(coin: Coin) {
+        let addAssetVC = AddAssetViewController(coin: coin)
+        addAssetVC.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(addAssetVC, animated: true)
     }
 }
