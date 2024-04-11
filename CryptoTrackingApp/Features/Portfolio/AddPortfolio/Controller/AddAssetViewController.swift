@@ -27,6 +27,7 @@ final class AddAssetViewController: UIViewController {
 // MARK: - Helpers
 extension AddAssetViewController {
     private func setup() {
+        addAssetView.delegate = self
         view.backgroundColor = .systemBackground
         title = coin?.name.uppercased()
         addConstraint()
@@ -40,5 +41,11 @@ extension AddAssetViewController {
             make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
+    }
+}
+// MARK: - AddAssetViewProtocol
+extension AddAssetViewController: AddAssetViewProtocol {
+    func popToRootControlller() {
+       navigationController?.popToRootViewController(animated: true)
     }
 }

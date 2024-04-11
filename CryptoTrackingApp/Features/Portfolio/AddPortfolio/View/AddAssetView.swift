@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol AddAssetViewProtocol:AnyObject {
+    func popToRootControlller()
+}
+
 final class AddAssetView: UIView {
     // MARK: - UIElements
     private let coinNameLabel: UILabel = {
@@ -70,11 +74,14 @@ final class AddAssetView: UIView {
                                                                   .foregroundColor: UIColor.label]), for: .normal)
         button.backgroundColor = .tertiarySystemFill
         button.layer.cornerRadius = 12
+        button.addTarget(self, action: #selector(didTapAddAssetButton), for: .touchUpInside)
         return button
     }()
     // MARK: - Properties
     var coin: Coin?
     private var isUSD = true
+    private let addAssetVM = AddAssetViewModel()
+    weak var delegate: AddAssetViewProtocol?
     
     // MARK: - Life Cycle
     override init(frame: CGRect) {
@@ -136,8 +143,12 @@ extension AddAssetView {
     func configure() {
         guard let coin = coin else { return }
         coinNameLabel.text = coin.symbol.uppercased()
-        totalPriceValueLabel.text = "$\(coin.currentPrice.rounded(toDecimalPlaces: 2))"
+        totalPriceValueLabel.text = ""
         coinPriceLabel.text = "$\(coin.currentPrice.rounded(toDecimalPlaces: 2))"
+    }
+    private func clearUI() {
+        pieceTexField.text = ""
+        totalPriceValueLabel.text = ""
     }
 }
 // MARK: - Selectors
@@ -166,5 +177,21 @@ extension AddAssetView {
             let amount = value / coinPrice
             totalPriceValueLabel.text = "\(amount.rounded(toDecimalPlaces: 2)) \(coin?.symbol.uppercased() ?? "")"
         }
+    }
+    @objc
+    private func didTapAddAssetButton() {
+        guard let coin = coin,
+              let totalPrice = totalPriceValueLabel.text?.removeFirst(value: "$"),
+              let piece = pieceTexField.text?.removeFirst(value: "$") else { return }
+        let asset = Asset(id: coin.id,
+                          imageUrl: coin.image,
+                          name: coin.name,
+                          symbol: coin.symbol,
+                          totalPrice: isUSD ? totalPrice.doubleValue : piece.doubleValue,
+                          piece: isUSD ? piece.doubleValue : totalPrice.replacingOccurrences(of: "\(coin.symbol.uppercased())", with: "").doubleValue,
+                          date: Date())
+        addAssetVM.createAsset(asset: asset)
+        clearUI()
+        delegate?.popToRootControlller()
     }
 }
