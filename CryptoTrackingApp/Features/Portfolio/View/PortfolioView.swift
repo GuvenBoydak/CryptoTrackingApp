@@ -95,12 +95,13 @@ final class PortfolioView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
+    }   
 }
 // MARK: - Helpers
 extension PortfolioView {
     private func setup(){
+        portfolioVM.delegate = self
+        portfolioVM.fetchAssetData()
         addConstraint()
         setupCollectionView()
     }
@@ -147,6 +148,9 @@ extension PortfolioView {
             make.bottom.equalToSuperview().offset(-8)
         }
     }
+    func didReloadTableView() {
+        portfolioVM.fetchAssetData()
+    }
 }
 // MARK: - Selectors
 extension PortfolioView {
@@ -175,5 +179,13 @@ extension PortfolioView {
     @objc
     private func didTapAddAssetButton() {
         delegate?.didTapAddAsset()
+    }
+}
+// MARK: - PortfolioViewModelProtocol
+extension PortfolioView: PortfolioViewModelProtocol {
+    func didReloadData() {
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
     }
 }

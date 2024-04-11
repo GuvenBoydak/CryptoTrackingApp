@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 final class PortfolioViewController: UIViewController {
 
     private let portfolioView = PortfolioView()
@@ -15,8 +16,10 @@ final class PortfolioViewController: UIViewController {
         super.viewDidLoad()
         setup()
     }
-    
-
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        portfolioView.didReloadTableView()
+    }
 }
 // MARK: - Helpers
 extension PortfolioViewController {
@@ -37,7 +40,7 @@ extension PortfolioViewController {
     }
 }
 // MARK: - PortfolioViewProtocol
-extension PortfolioViewController: PortfolioViewProtocol {
+extension PortfolioViewController: PortfolioViewProtocol {   
     func didTapAddAsset() {
         let searchVC = SearchViewController()
         searchVC.navigationItem.largeTitleDisplayMode = .never

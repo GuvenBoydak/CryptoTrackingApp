@@ -32,7 +32,7 @@ final class PortfolioCollectionViewCell: UICollectionViewCell {
     private let shortNameLabel: UILabel = {
         let label = UILabel()
         label.text = "ABR"
-        label.font = .systemFont(ofSize: 12,weight: .medium)
+        label.font = .systemFont(ofSize: 13,weight: .regular)
         return label
     }()
     private let currentPriceLabel: UILabel = {
@@ -99,12 +99,41 @@ extension PortfolioCollectionViewCell {
         }
         addSubview(containerView)
         containerView.snp.makeConstraints { make in
-            make.height.greaterThanOrEqualTo(50)
+            make.height.lessThanOrEqualTo(60)
             make.leading.equalToSuperview().offset(12)
             make.trailing.equalToSuperview().offset(-12)
         }
         image.snp.makeConstraints { make in
-            make.width.equalTo(30)
+            make.width.equalTo(35)
+        }
+    }
+    func configure(model: Asset) {
+        nameTitleLabel.text = model.name
+        shortNameLabel.text = model.symbol.uppercased()
+        currentPriceLabel.text = model.currentPrice?.asCurrencyWith6Decimals()
+
+        if let priceChange = model.priceChange,
+           priceChange.description.contains("-") {
+            currentPriceChangeLabel.text = "-\(priceChange.rounded(toDecimalPlaces: 2))"
+            currentPriceChangeLabel.textColor = .systemRed
+        } else {
+            currentPriceChangeLabel.textColor = .green
+            currentPriceChangeLabel.text = "+\(model.priceChange?.rounded(toDecimalPlaces: 2) ?? "")"
+        }
+        totalAmountLabel.text = "$"+model.totalPrice.rounded(toDecimalPlaces: 2)
+        pieceCoinLabel.text = "\(model.piece.doubleValue)"
+        
+        if let url = URL(string: model.imageUrl) {
+            ImageLoader.shared.downloadImage(url) { [weak self] result in
+                switch result {
+                case .success(let data):
+                    DispatchQueue.main.async {
+                        self?.image.image = UIImage(data: data)
+                    }
+                case .failure(let failure):
+                    print(failure)
+                }
+            }
         }
     }
 }

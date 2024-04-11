@@ -35,9 +35,10 @@ struct Coin: Codable {
         case circulatingSupply = "circulating_supply"
         case totalSupply = "total_supply"
         case maxSupply = "max_supply"
-        case ath, atl
+        case ath
         case athChangePercentage = "ath_change_percentage"
         case athDate = "ath_date"
+        case atl
         case sparklineIn7D = "sparkline_in_7d"
     }
 }

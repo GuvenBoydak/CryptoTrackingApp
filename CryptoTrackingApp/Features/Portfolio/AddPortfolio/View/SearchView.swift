@@ -33,6 +33,7 @@ final class SearchView: UIView {
     // MARK: - Properties
     private let searchVM = SearchViewModel()
     weak var delegate: SearchViewProtocol?
+    
     // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
