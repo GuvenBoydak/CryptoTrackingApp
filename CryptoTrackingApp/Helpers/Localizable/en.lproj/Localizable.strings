@@ -32,3 +32,13 @@
 "Asset" = "Asset";
 "Price" = "Price";
 "Piece" = "Piece";
+
+// MARK: - Search
+"Add Portfolio" = "Add Portfolio";
+"Search" = "Search Coin";
+
+// MARK: - AddAsset
+"USD" = "USD";
+"Total Price" = "Total Price/Piece";
+"Add Asset" = "Add Asset";
+

@@ -32,3 +32,13 @@
 "Asset" = "Varlık";
 "Price" = "Fiyat";
 "Piece" = "Adet";
+
+// MARK: - Search
+"Add Portfolio" = "Portföye Ekle";
+"Search" = "Coin Ara";
+
+
+// MARK: - AddAsset
+"USD" = "USD";
+"Total Price" = "Toplam Fiyat/Adet";
+"Add Asset" = "Varlık Ekle";

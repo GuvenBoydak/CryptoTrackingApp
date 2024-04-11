@@ -64,4 +64,27 @@ struct LocalizableKey {
             }
         }
     }
+    enum search: String {
+        case addPortfolio = "Add Portfolio"
+        case search = "Search"
+        
+        var title: String {
+            switch self {
+            case .addPortfolio,.search:
+                rawValue.localized()
+            }
+        }
+    }
+    enum addAsset: String {
+        case usd = "USD"
+        case totalPrice = "Total Price"
+        case addAsset = "Add Asset"
+        
+        var title: String {
+            switch self {
+            case .usd,.totalPrice,.addAsset:
+                rawValue.localized()
+            }
+        }
+    }
 }
