@@ -49,3 +49,7 @@
 "Email" = "Email";
 "Password" = "Şifre";
 "Register" = "Kayıt Ol";
+
+// MARK: - Login
+"Login" = "Giriş";
+"Click To Register" = "Kayıt Olmak için Tıklayınız";

@@ -101,4 +101,16 @@ struct LocalizableKey {
             }
         }
     }
+    
+    enum login: String {
+        case login = "Login"
+        case clickRegister = "Click To Register"
+        
+        var title: String {
+            switch self {
+            case .login,.clickRegister:
+                rawValue.localized()
+            }
+        }
+    }
 }
