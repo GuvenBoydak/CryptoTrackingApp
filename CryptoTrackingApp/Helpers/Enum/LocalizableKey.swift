@@ -87,4 +87,18 @@ struct LocalizableKey {
             }
         }
     }
+    enum register: String {
+        case create = "Create Account"
+        case username = "Username"
+        case email = "Email"
+        case password = "Password"
+        case register = "Register"
+        
+        var title: String {
+            switch self {
+            case .create,.username,.email,.password,.register:
+                rawValue.localized()
+            }
+        }
+    }
 }

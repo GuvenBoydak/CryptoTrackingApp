@@ -42,3 +42,10 @@
 "USD" = "USD";
 "Total Price" = "Toplam Fiyat/Adet";
 "Add Asset" = "Varlık Ekle";
+
+//MARK: - Register
+"Create Account" = "Kulanaıcı Oluştur";
+"Username" = "Kulanıcı Adı";
+"Email" = "Email";
+"Password" = "Şifre";
+"Register" = "Kayıt Ol";

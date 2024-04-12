@@ -42,3 +42,9 @@
 "Total Price" = "Total Price/Piece";
 "Add Asset" = "Add Asset";
 
+//MARK: - Register
+"Create Account" = "Create Account";
+"Username" = "Username";
+"Email" = "Email";
+"Password" = "Password";
+"Register" = "Register";

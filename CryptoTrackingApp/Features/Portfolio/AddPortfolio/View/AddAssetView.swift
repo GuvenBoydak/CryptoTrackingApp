@@ -182,7 +182,9 @@ extension AddAssetView {
     private func didTapAddAssetButton() {
         guard let coin = coin,
               let totalPrice = totalPriceValueLabel.text?.removeFirst(value: "$"),
-              let piece = pieceTexField.text?.removeFirst(value: "$") else { return }
+              let piece = pieceTexField.text?.removeFirst(value: "$"),
+              !totalPrice.isEmpty,
+              !piece.isEmpty  else { return }
         let asset = Asset(id: coin.id,
                           imageUrl: coin.image,
                           name: coin.name,
