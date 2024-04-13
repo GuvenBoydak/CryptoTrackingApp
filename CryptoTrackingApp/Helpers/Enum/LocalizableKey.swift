@@ -113,4 +113,20 @@ struct LocalizableKey {
             }
         }
     }
+    enum Setting: String {
+        case username = "Username"
+        case email = "Email"
+        case edit = "Edit Profile"
+        case dark = "Dark Mode"
+        case coinGecko = "CoinGecko Api"
+        case github = "Github"
+        case signOut = "Sign Out"
+        
+        var title: String {
+            switch self {
+            case .username,.email,.edit,.dark,.coinGecko,.github,.signOut:
+                rawValue.localized()
+            }
+        }
+    }
 }

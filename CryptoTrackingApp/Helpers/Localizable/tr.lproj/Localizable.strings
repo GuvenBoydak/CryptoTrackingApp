@@ -53,3 +53,12 @@
 // MARK: - Login
 "Login" = "Giriş";
 "Click To Register" = "Kayıt Olmak için Tıklayınız";
+
+// MARK: - Setting
+"Username" = "Kulanıcı Adi";
+"Email" = "Email";
+"Edit Profile" = "Profil Düzenle";
+"Dark Mode" = "Karanlık Mod";
+"CoinGecko Api" = "CoinGecko Api";
+"Github" = "Github";
+"Sign Out" = "Oturum Kapat";
