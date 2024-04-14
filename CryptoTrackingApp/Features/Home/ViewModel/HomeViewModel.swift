@@ -41,7 +41,7 @@ extension HomeViewModel {
             case .success(let model):
                 self?.processResult(model: model)
                 self?.delegate?.didInitial()
-            case .failure(let error):
+            case .failure:
                break
             }
         }
@@ -101,9 +101,9 @@ extension HomeViewModel: UICollectionViewDelegate,UICollectionViewDataSource,UIC
         case .coins(let coins):
             delegate?.didSelectedCoin(coin: coins[indexPath.item])
             break
-        case .trendings(let trendings):
+        case .trendings:
             break
-        case .exchange(let exchanges):
+        case .exchange:
             break
         case .none:
             break

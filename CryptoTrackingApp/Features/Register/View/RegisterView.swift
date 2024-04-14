@@ -28,6 +28,7 @@ final class RegisterView: UIView {
         image.image = UIImage(systemName: ImageKey.Home.person.rawValue)
         image.contentMode = .scaleAspectFit
         image.clipsToBounds = true
+        image.layer.cornerRadius = 12
         return image
     }()
     private let createTitleLabel: UILabel = {
@@ -69,7 +70,7 @@ final class RegisterView: UIView {
                                                      attributes: [.font: UIFont.systemFont(ofSize: 16, weight: .medium),
                                                                   .foregroundColor: UIColor.gray]),
                                   for: .normal)
-        button.backgroundColor = .tertiarySystemGroupedBackground
+        button.backgroundColor = .systemMint
         button.layer.cornerRadius = 12
         button.isEnabled = false
         button.addTarget(self, action: #selector(didTapRegisterButton), for: .touchUpInside)

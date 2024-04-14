@@ -123,7 +123,7 @@ extension PortfolioView {
         let buttonStackView = UIStackView(arrangedSubviews: [currentAssetButton,activityButton,UIView()])
         buttonStackView.axis = .horizontal
         buttonStackView.spacing = 25
-        let titleStackView = UIStackView(arrangedSubviews: [assetTitleLabel,UIView(),priceTitleLabel,pieceCoinTitleLabel])
+        let titleStackView = UIStackView(arrangedSubviews: [assetTitleLabel,UIView(),UIView(),UIView(),priceTitleLabel,pieceCoinTitleLabel,UIView()])
         titleStackView.axis = .horizontal
         titleStackView.distribution = .equalSpacing
         stackView = UIStackView(arrangedSubviews: [headerContainer,buttonStackView,UIView(),titleStackView])
@@ -187,5 +187,6 @@ extension PortfolioView: PortfolioViewModelProtocol {
         DispatchQueue.main.async {
             self.collectionView.reloadData()
         }
+        totalPriceValueLabel.text = "$"+portfolioVM.assets.reduce(0, { $0 + $1.totalPrice }).rounded(toDecimalPlaces: 2)
     }
 }

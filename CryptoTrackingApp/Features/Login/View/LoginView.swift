@@ -44,7 +44,7 @@ final class LoginView: UIView {
                                                      attributes: [.font: UIFont.systemFont(ofSize: 16, weight: .medium),
                                                                   .foregroundColor: UIColor.gray]),
                                   for: .normal)
-        button.backgroundColor = .tertiarySystemGroupedBackground
+        button.backgroundColor = .systemMint
         button.layer.cornerRadius = 12
         button.isEnabled = false
         button.addTarget(self, action: #selector(didTappedLoginButton), for: .touchUpInside)

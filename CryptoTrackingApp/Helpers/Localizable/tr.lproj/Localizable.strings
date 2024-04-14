@@ -44,7 +44,7 @@
 "Add Asset" = "Varlık Ekle";
 
 //MARK: - Register
-"Create Account" = "Kulanaıcı Oluştur";
+"Create Account" = "Kulanıcı Oluştur";
 "Username" = "Kulanıcı Adı";
 "Email" = "Email";
 "Password" = "Şifre";
@@ -57,7 +57,6 @@
 // MARK: - Setting
 "Username" = "Kulanıcı Adi";
 "Email" = "Email";
-"Edit Profile" = "Profil Düzenle";
 "Dark Mode" = "Karanlık Mod";
 "CoinGecko Api" = "CoinGecko Api";
 "Github" = "Github";
