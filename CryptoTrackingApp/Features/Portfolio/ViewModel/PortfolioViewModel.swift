@@ -8,14 +8,16 @@
 import Foundation
 import UIKit
 import FirebaseFirestore
+import FirebaseAuth
 
 protocol PortfolioViewModelProtocol: AnyObject {
     func didReloadData()
 }
 
 final class PortfolioViewModel: NSObject {
-    private var assets: [Asset] = []
+    var assets: [Asset] = []
     weak var delegate: PortfolioViewModelProtocol?
+    var isShowActivityCell = false
     
     override init() {
         super.init()
@@ -27,12 +29,13 @@ extension PortfolioViewModel {
         
     }
     func fetchAssetData() {
-        Firestore.firestore().collection("Asset").getDocuments { [weak self] snapshot, error in
+        guard let user = Auth.auth().currentUser else { return }
+        Firestore.firestore().collection("Asset").whereField("userId", isEqualTo: user.uid).getDocuments { [weak self] snapshot, error in
             guard let documents = snapshot?.documents else {
                 return
             }
             // Asset verilerini al
-            var assets = documents.compactMap { document -> Asset? in
+            let assets = documents.compactMap { document -> Asset? in
                 let assetData = document.data()
                 let asset = Asset(data: assetData)
                 return asset
@@ -43,6 +46,7 @@ extension PortfolioViewModel {
                 self?.assets = assets.compactMap { asset -> Asset? in
                     if let coin = coins.first(where: { $0.id == asset.id }) {
                         return Asset(id: asset.id,
+                                     userId: asset.userId,
                                      imageUrl: asset.imageUrl,
                                      name: asset.name,
                                      symbol: asset.symbol,
@@ -53,7 +57,7 @@ extension PortfolioViewModel {
                                      date: asset.date)
                     }
                     return nil
-                }
+                }.sorted { $0.totalPrice > $1.totalPrice }
                 self?.delegate?.didReloadData()
             }
         }
@@ -76,6 +80,11 @@ extension PortfolioViewModel: UICollectionViewDelegate,UICollectionViewDataSourc
         assets.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if isShowActivityCell {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PortfolioActivityCollectionViewCell.identifier, for: indexPath) as! PortfolioActivityCollectionViewCell
+            cell.configure(model: assets[indexPath.row])
+            return cell
+        }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PortfolioCollectionViewCell.identifier, for: indexPath) as! PortfolioCollectionViewCell
         cell.configure(model: assets[indexPath.row])
         return cell

@@ -1,14 +1,14 @@
 //
-//  PortfolioCollectionViewCell.swift
+//  PortfolioActivityCollectionViewCell.swift
 //  CryptoTrackingApp
 //
-//  Created by Güven Boydak on 10.04.2024.
+//  Created by Güven Boydak on 14.04.2024.
 //
 
 import UIKit
 
-final class PortfolioCollectionViewCell: UICollectionViewCell {
-    static let identifier = "PortfolioCollectionViewCell"
+final class PortfolioActivityCollectionViewCell: UICollectionViewCell {
+    static let identifier = "PortfolioActivityCollectionViewCell"
     // MARK: - UIElements
     private let containerView: UIView = {
         let view = UIView()
@@ -30,24 +30,6 @@ final class PortfolioCollectionViewCell: UICollectionViewCell {
         label.textAlignment = .left
         return label
     }()
-    private let shortNameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "ABR"
-        label.font = .systemFont(ofSize: 13,weight: .regular)
-        return label
-    }()
-    private let currentPriceLabel: UILabel = {
-        let label = UILabel()
-        label.text = "$1,52"
-        label.font = .systemFont(ofSize: 14,weight: .medium)
-        return label
-    }()
-    private let currentPriceChangeLabel: UILabel = {
-        let label = UILabel()
-        label.text = "+2,10"
-        label.font = .systemFont(ofSize: 13,weight: .regular)
-        return label
-    }()
     private let totalAmountLabel: UILabel = {
         let label = UILabel()
         label.text = "$1520"
@@ -67,31 +49,20 @@ final class PortfolioCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         setup()
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 // MARK: - Helpers
-extension PortfolioCollectionViewCell {
+extension PortfolioActivityCollectionViewCell {
     private func setup() {
         addConstraint()
     }
     private func addConstraint() {
-        let nameStackView = UIStackView(arrangedSubviews: [nameTitleLabel,shortNameLabel])
-        nameStackView.axis = .vertical
-        nameStackView.spacing = 4
-        let priceStackView = UIStackView(arrangedSubviews: [currentPriceLabel,currentPriceChangeLabel])
-        priceStackView.axis = .vertical
-        priceStackView.spacing = 4
-        let totalAmountStackView = UIStackView(arrangedSubviews: [totalAmountLabel,pieceCoinLabel])
-        totalAmountStackView.axis = .vertical
-        totalAmountStackView.spacing = 4
-        let stackView = UIStackView(arrangedSubviews: [image,nameStackView,priceStackView,totalAmountStackView])
+        let stackView = UIStackView(arrangedSubviews: [image,nameTitleLabel,totalAmountLabel,pieceCoinLabel])
         stackView.axis = .horizontal
         stackView.spacing = 20
         containerView.addSubview(stackView)
-
         stackView.snp.makeConstraints { make in
             make.top.equalTo(containerView.snp.top).offset(8)
             make.leading.equalTo(containerView.snp.leading).offset(10)
@@ -107,26 +78,15 @@ extension PortfolioCollectionViewCell {
         image.snp.makeConstraints { make in
             make.width.equalTo(35)
         }
-        nameStackView.snp.makeConstraints { make in
+        nameTitleLabel.snp.makeConstraints { make in
             make.width.equalTo(100)
         }
-        priceStackView.snp.makeConstraints { make in
+        totalAmountLabel.snp.makeConstraints { make in
             make.width.equalTo(70)
         }
     }
     func configure(model: Asset) {
         nameTitleLabel.text = model.name
-        shortNameLabel.text = model.symbol.uppercased()
-        currentPriceLabel.text = model.currentPrice?.asCurrencyWith6Decimals()
-
-        if let priceChange = model.priceChange,
-           priceChange.description.contains("-") {
-            currentPriceChangeLabel.text = "\(priceChange.rounded(toDecimalPlaces: 2))"
-            currentPriceChangeLabel.textColor = .systemRed
-        } else {
-            currentPriceChangeLabel.textColor = .green
-            currentPriceChangeLabel.text = "+\(model.priceChange?.rounded(toDecimalPlaces: 2) ?? "")"
-        }
         totalAmountLabel.text = "$"+model.totalPrice.rounded(toDecimalPlaces: 2)
         pieceCoinLabel.text = "\(model.piece.doubleValue) \(model.symbol.uppercased())"
         

@@ -80,6 +80,7 @@ final class PortfolioView: UIView {
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(PortfolioCollectionViewCell.self, forCellWithReuseIdentifier: PortfolioCollectionViewCell.identifier)
+        collectionView.register(PortfolioActivityCollectionViewCell.self, forCellWithReuseIdentifier: PortfolioActivityCollectionViewCell.identifier)
         return collectionView
     }()
     private var stackView: UIStackView!
@@ -123,7 +124,7 @@ extension PortfolioView {
         let buttonStackView = UIStackView(arrangedSubviews: [currentAssetButton,activityButton,UIView()])
         buttonStackView.axis = .horizontal
         buttonStackView.spacing = 25
-        let titleStackView = UIStackView(arrangedSubviews: [assetTitleLabel,UIView(),UIView(),UIView(),priceTitleLabel,pieceCoinTitleLabel,UIView()])
+        let titleStackView = UIStackView(arrangedSubviews: [assetTitleLabel,UIView(),UIView(),priceTitleLabel,pieceCoinTitleLabel,UIView()])
         titleStackView.axis = .horizontal
         titleStackView.distribution = .equalSpacing
         stackView = UIStackView(arrangedSubviews: [headerContainer,buttonStackView,UIView(),titleStackView])
@@ -156,6 +157,8 @@ extension PortfolioView {
 extension PortfolioView {
     @objc
     private func didTapCurrentAssetButton(){
+        portfolioVM.isShowActivityCell = false
+        didReloadData()
         activityButton.tintColor = .systemGray
         activityButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Portfolio.activity.title,
                                                      attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
@@ -167,6 +170,8 @@ extension PortfolioView {
     }
     @objc
     private func didTapActivityButton(){
+        portfolioVM.isShowActivityCell = true
+        didReloadData()
         currentAssetButton.tintColor = .systemGray
         currentAssetButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Portfolio.currentAsset.title,
                                                      attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
@@ -174,7 +179,7 @@ extension PortfolioView {
         activityButton.tintColor = .systemBlue
         activityButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Portfolio.activity.title,
                                                      attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
-                                                                  .foregroundColor: UIColor.systemBlue]), for: .normal)
+                                                            .foregroundColor: UIColor.systemBlue]), for: .normal)
     }
     @objc
     private func didTapAddAssetButton() {

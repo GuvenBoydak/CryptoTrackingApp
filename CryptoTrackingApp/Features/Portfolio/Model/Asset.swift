@@ -8,8 +8,9 @@
 import Foundation
 
 struct Asset {
-    init(id: String, imageUrl: String, name: String, symbol: String, currentPrice: Double? = nil, priceChange: Double? = nil, totalPrice: Double, piece: Double, date: Date) {
+    init(id: String,userId: String, imageUrl: String, name: String, symbol: String, currentPrice: Double? = nil, priceChange: Double? = nil, totalPrice: Double, piece: Double, date: Date) {
         self.id = id
+        self.userId = userId
         self.imageUrl = imageUrl
         self.name = name
         self.symbol = symbol
@@ -21,6 +22,7 @@ struct Asset {
     }
     init(data: [String: Any]) {
         self.id = data["id"] as? String ?? ""
+        self.userId = data["userId"] as? String ?? ""
         self.imageUrl = data["imageURL"] as? String ?? ""
         self.name = data["name"] as? String ?? ""
         self.symbol = data["symbol"] as? String ?? ""
@@ -31,6 +33,7 @@ struct Asset {
         self.date = data["date"] as? Date ?? Date()
     }
     let id: String
+    let userId: String
     let imageUrl: String
     let name: String
     let symbol: String
@@ -42,6 +45,7 @@ struct Asset {
     
     func createFirebaseModel() -> [String: Any] {
         return ["id": id,
+                "userId": userId,
                 "imageURL": imageUrl,
                 "name": name,
                 "symbol": symbol,

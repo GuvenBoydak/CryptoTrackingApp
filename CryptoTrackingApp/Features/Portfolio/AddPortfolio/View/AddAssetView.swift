@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 protocol AddAssetViewProtocol:AnyObject {
     func popToRootControlller()
@@ -184,8 +185,10 @@ extension AddAssetView {
               let totalPrice = totalPriceValueLabel.text?.removeFirst(value: "$"),
               let piece = pieceTexField.text?.removeFirst(value: "$"),
               !totalPrice.isEmpty,
-              !piece.isEmpty  else { return }
+              !piece.isEmpty,
+        let user = Auth.auth().currentUser else { return }
         let asset = Asset(id: coin.id,
+                          userId: user.uid,
                           imageUrl: coin.image,
                           name: coin.name,
                           symbol: coin.symbol,
