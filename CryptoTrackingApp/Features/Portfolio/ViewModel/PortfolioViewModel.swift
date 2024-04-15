@@ -68,7 +68,8 @@ extension PortfolioViewModel {
             switch result {
             case .success(let model):
                 completion(model)
-            case .failure:
+            case .failure(let error):
+                print(error.localizedDescription)
                 break
             }
         }

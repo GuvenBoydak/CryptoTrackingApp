@@ -168,16 +168,14 @@ extension HomeCoinAndTrendingCollectionViewCell {
             totalMarketCapLabel.text = trending.data.marketCap.removeFirstAndFormatted()
             
             if let url = URL(string: trending.data.sparkline) {
-                DispatchQueue.global().async {
+                DispatchQueue.main.async {
                 let image = UIView(svgURL: url) { [weak self] (svgLayer) in
                         guard let strong = self else { return }
                         svgLayer.fillColor = UIColor.clear.cgColor
                         svgLayer.resizeToFit(strong.chartView.bounds)
                     }
-                    DispatchQueue.main.async {
                         self.chartImage.subviews.forEach { $0.removeFromSuperview() }
                         self.chartImage.addSubview(image)
-                    }
                }
             }
             priceLabel.text = trending.data.price.asCurrencyWith6Decimals()

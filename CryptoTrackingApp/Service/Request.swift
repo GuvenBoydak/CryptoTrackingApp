@@ -35,7 +35,7 @@ enum Endpoint {
         case .coins(let page):
             return "coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=\(page)&sparkline=true&price_change_percentage=24h?"
         case .searchCoin:
-            return "coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=true&price_change_percentage=24h?"
+            return "coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=24h?"
         case .coinById(let id):
             return "coins/\(id)?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true?"
         case .trending:

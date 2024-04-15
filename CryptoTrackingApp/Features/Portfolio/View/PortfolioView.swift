@@ -85,7 +85,7 @@ final class PortfolioView: UIView {
     }()
     private var stackView: UIStackView!
     // MARK: - Properties
-    private let portfolioVM = PortfolioViewModel()
+     let portfolioVM = PortfolioViewModel()
     weak var delegate: PortfolioViewProtocol?
     
     // MARK: - Life Cycle
@@ -93,16 +93,14 @@ final class PortfolioView: UIView {
         super.init(frame: frame)
         setup()
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }   
+    }
 }
 // MARK: - Helpers
 extension PortfolioView {
     private func setup(){
         portfolioVM.delegate = self
-        portfolioVM.fetchAssetData()
         addConstraint()
         setupCollectionView()
     }
@@ -189,9 +187,10 @@ extension PortfolioView {
 // MARK: - PortfolioViewModelProtocol
 extension PortfolioView: PortfolioViewModelProtocol {
     func didReloadData() {
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
+        DispatchQueue.main.async { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.collectionView.reloadData()
+            strongSelf.totalPriceValueLabel.text = "$"+strongSelf.portfolioVM.assets.reduce(0, { $0 + $1.totalPrice }).rounded(toDecimalPlaces: 2)
         }
-        totalPriceValueLabel.text = "$"+portfolioVM.assets.reduce(0, { $0 + $1.totalPrice }).rounded(toDecimalPlaces: 2)
     }
 }

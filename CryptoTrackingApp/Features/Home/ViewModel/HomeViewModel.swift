@@ -42,6 +42,7 @@ extension HomeViewModel {
                 self?.processResult(model: model)
                 self?.delegate?.didInitial()
             case .failure:
+                self?.delegate?.didInitial()
                break
             }
         }

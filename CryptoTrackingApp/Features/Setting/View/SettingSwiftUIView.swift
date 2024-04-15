@@ -9,6 +9,8 @@ import SwiftUI
 
 protocol SettingSwiftUIViewProtocol: AnyObject {
     func didTappedSignOutButton()
+    func didTappedCoinGeckoApi(url: SettingURL)
+    func didTappedGithub(url: SettingURL)
 }
 
 struct SettingSwiftUIView: View {
@@ -18,16 +20,16 @@ struct SettingSwiftUIView: View {
     
     var body: some View {
         VStack {
+            Spacer()
             AsyncImage(url: URL(string: settingVM.user?.imageUrl ?? "https://firebasestorage.googleapis.com:443/v0/b/cryptotrackingapp-697d7.appspot.com/o/Given8D8D9CA1-CF1C-4069-BC3C-5B3168269DA7?alt=media&token=851c1707-cf71-4820-8a2e-273a3c2fc1b8")) { image in
                 image.resizable()
-                    .frame(width: 100,height: 100)
+                    .frame(width: 120,height: 120)
                     .clipShape(Circle())
                     .padding()
             } placeholder: {
                 ProgressView()
                     .padding()
             }
-
             Text("\(LocalizableKey.Setting.username.title): \(settingVM.user?.username ?? "")")
                 .padding()
                 .frame(maxWidth: .infinity)
@@ -38,18 +40,7 @@ struct SettingSwiftUIView: View {
                 .frame(maxWidth: .infinity)
                 .background(Color.background)
                 .cornerRadius(12)
-            Button(action: {
-                
-            }, label: {
-                Text(LocalizableKey.Setting.edit.title)
-                    .foregroundStyle(.darklight)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color(UIColor.tertiaryLabel))
-                    .cornerRadius(12)
-            })
-            .padding(.vertical,12)
-            .padding(.bottom,12)
+                .padding(.bottom,12)
             Divider()
                 .background(Color(UIColor.label))
             HStack {
@@ -72,13 +63,19 @@ struct SettingSwiftUIView: View {
                 .frame(maxWidth: .infinity)
                 .background(Color.background)
                 .cornerRadius(12)
+                .onTapGesture {
+                    delegate?.didTappedCoinGeckoApi(url: .coinGecko)
+                }
             Text(LocalizableKey.Setting.github.title)
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(Color.background)
                 .cornerRadius(12)
+                .onTapGesture {
+                    delegate?.didTappedCoinGeckoApi(url: .github)
+                }
             Button(action: {
-                
+                settingVM.signOut()
                 delegate?.didTappedSignOutButton()
             }, label: {
                 Text(LocalizableKey.Setting.signOut.title)

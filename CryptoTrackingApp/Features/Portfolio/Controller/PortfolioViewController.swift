@@ -15,6 +15,7 @@ final class PortfolioViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        portfolioView.portfolioVM.fetchAssetData()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -40,7 +41,7 @@ extension PortfolioViewController {
     }
 }
 // MARK: - PortfolioViewProtocol
-extension PortfolioViewController: PortfolioViewProtocol {   
+extension PortfolioViewController: PortfolioViewProtocol {    
     func didTapAddAsset() {
         let searchVC = SearchViewController()
         searchVC.navigationItem.largeTitleDisplayMode = .never

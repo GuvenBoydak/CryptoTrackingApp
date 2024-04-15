@@ -139,7 +139,7 @@ extension HomeView {
         coinStackView.axis = .vertical
         let trendingStackView = UIStackView(arrangedSubviews: [trendingButton,trendingBarView])
         trendingStackView.axis = .vertical
-        var exchangeStakView = UIStackView(arrangedSubviews: [exchangeButton,exchangeBarView])
+        let exchangeStakView = UIStackView(arrangedSubviews: [exchangeButton,exchangeBarView])
         exchangeStakView.axis = .vertical
         
         stackView = UIStackView(arrangedSubviews: [coinStackView,trendingStackView,exchangeStakView])
@@ -234,7 +234,7 @@ extension HomeView {
 extension HomeView {
     @objc private func didTapCoinsButton(_ sender: UIButton) {
         setTitleColor(button: sender, color: .systemBlue)
-        trendingButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Home.coin.title,
+        trendingButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Home.trending.title,
                                                              attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                           .foregroundColor: UIColor.systemGray]), for: .normal)
         trendingBarView.backgroundColor = .lightGray
