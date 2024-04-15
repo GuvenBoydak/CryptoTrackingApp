@@ -7,6 +7,8 @@
 
 import UIKit
 import SwiftUI
+import SafariServices
+
 
 final class SettingViewController: UIViewController {
     var settingSwiftUIView: UIHostingController<SettingSwiftUIView>?
@@ -42,6 +44,18 @@ extension SettingViewController {
 }
 // MARK: - SettingSwiftUIViewProtocol
 extension SettingViewController: SettingSwiftUIViewProtocol {
+    func didTappedCoinGeckoApi(url: SettingURL) {
+        guard let url = URL(string: url.rawValue) else { return }
+        let vc = SFSafariViewController(url: url)
+        present(vc, animated: true)
+    }
+    
+    func didTappedGithub(url: SettingURL) {
+        guard let url = URL(string: url.rawValue) else { return }
+        let vc = SFSafariViewController(url: url)
+        present(vc, animated: true)
+    }
+    
     func didTappedSignOutButton() {
         let vc = LoginViewController()
         vc.modalPresentationStyle = .fullScreen

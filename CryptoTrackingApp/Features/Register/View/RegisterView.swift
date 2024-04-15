@@ -60,6 +60,7 @@ final class RegisterView: UIView {
         textfield.placeholder = LocalizableKey.register.password.title
         textfield.backgroundColor = .tertiarySystemFill
         textfield.textAlignment = .center
+        textfield.isSecureTextEntry = true
         textfield.layer.cornerRadius = 12
         textfield.addTarget(self, action: #selector(didEditPasswordTextField(_:)), for: .editingChanged)
         return textfield

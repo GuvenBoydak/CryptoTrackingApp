@@ -22,13 +22,19 @@ extension SettingViewModel {
         if user == nil {
             guard let userId = Auth.auth().currentUser?.uid else { return }
             Firestore.firestore().collection("User").document(userId).getDocument { snapshot, error in
-                if let eeror = error {
+                if let error = error {
                     return
                 }
                 if let data = snapshot?.data() {
                     self.user = User(data: data)
                 }
             }
+        }
+    }
+    func signOut() {
+        do {
+            try Auth.auth().signOut()
+        } catch {
         }
     }
 }

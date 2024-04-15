@@ -35,6 +35,7 @@ final class LoginView: UIView {
         textfield.backgroundColor = .tertiarySystemFill
         textfield.textAlignment = .center
         textfield.layer.cornerRadius = 12
+        textfield.isSecureTextEntry = true
         textfield.addTarget(self, action: #selector(didEditPasswordTextField(_:)), for: .editingChanged)
         return textfield
     }()
