@@ -109,7 +109,7 @@ extension PortfolioViewModel {
 extension PortfolioViewModel: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isShowActivityCell {
-         return assetActivitys.count
+            return assetActivitys.count
         }
         return assets.count
     }
@@ -124,24 +124,32 @@ extension PortfolioViewModel: UITableViewDelegate,UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "Sil") { [weak self] action, view, completion in
-            guard let strongSelf = self else { return }
-            strongSelf.deleteAsset(asset: strongSelf.assets[indexPath.item])
-            strongSelf.fetchAssetData()
+        if !isShowActivityCell {
+            let deleteAction = UIContextualAction(style: .destructive, title: "Sil") { [weak self] action, view, completion in
+                guard let strongSelf = self else { return }
+                strongSelf.deleteAsset(asset: strongSelf.assets[indexPath.item])
+                strongSelf.fetchAssetData()
+                completion(true)
+            }
+            let swipeActions = UISwipeActionsConfiguration(actions: [deleteAction])
+            return swipeActions
         }
-        let swipeActions = UISwipeActionsConfiguration(actions: [deleteAction])
-        return swipeActions
+        return UISwipeActionsConfiguration(actions: [])
     }
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let editAction = UIContextualAction(style: .destructive, title: "Edit") { [weak self] action, view, completion in
-            guard let strongSelf = self else { return }
-            let asset = strongSelf.assets[indexPath.item]
-            if let coin = strongSelf.coins.first(where: { $0.id == asset.id }) {
-                strongSelf.setCoinPrice(coin: coin)
+        if !isShowActivityCell {
+            let editAction = UIContextualAction(style: .destructive, title: "Edit") { [weak self] action, view, completion in
+                guard let strongSelf = self else { return }
+                let asset = strongSelf.assets[indexPath.item]
+                if let coin = strongSelf.coins.first(where: { $0.id == asset.id }) {
+                    strongSelf.setCoinPrice(coin: coin)
+                }
+                strongSelf.delegate?.goToEditAssetVC(asset: asset)
+                completion(true)
             }
-            strongSelf.delegate?.goToEditAssetVC(asset: asset)
+            let swipeActions = UISwipeActionsConfiguration(actions: [editAction])
+            return swipeActions
         }
-        let swipeActions = UISwipeActionsConfiguration(actions: [editAction])
-        return swipeActions
+        return UISwipeActionsConfiguration(actions: [])
     }
 }

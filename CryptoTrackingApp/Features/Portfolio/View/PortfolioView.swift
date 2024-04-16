@@ -140,6 +140,8 @@ extension PortfolioView {
         tableView.dataSource = portfolioVM
         tableView.rowHeight = 70
         tableView.separatorStyle = .none
+        tableView.allowsSelection = false
+        tableView.allowsSelectionDuringEditing = false
         addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.top.equalTo(stackView.snp.bottom).offset(8)
