@@ -24,4 +24,6 @@
     <td>- Kullanıcı bilgisi, Dark - Light mode geçiş, Api ve Github a yöneldirme, Oturum Kapatma</td>
   </tr>
 </table>
-
+<img src="Gif/crypto1.gif" width="35%"> 
+<img src="Gif/crypto2.gif" width="35%"> 
+<img src="Gif/crypto3.gif" width="35%"> 
