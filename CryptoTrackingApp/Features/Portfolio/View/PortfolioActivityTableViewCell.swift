@@ -7,8 +7,8 @@
 
 import UIKit
 
-final class PortfolioActivityCollectionViewCell: UICollectionViewCell {
-    static let identifier = "PortfolioActivityCollectionViewCell"
+final class PortfolioActivityTableViewCell: UITableViewCell {
+    static let identifier = "PortfolioActivityTableViewCell"
     // MARK: - UIElements
     private let containerView: UIView = {
         let view = UIView()
@@ -45,8 +45,8 @@ final class PortfolioActivityCollectionViewCell: UICollectionViewCell {
     // MARK: - Properties
     
     // MARK: - Life Cycle
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
     }
     required init?(coder: NSCoder) {
@@ -54,7 +54,7 @@ final class PortfolioActivityCollectionViewCell: UICollectionViewCell {
     }
 }
 // MARK: - Helpers
-extension PortfolioActivityCollectionViewCell {
+extension PortfolioActivityTableViewCell {
     private func setup() {
         addConstraint()
     }
@@ -89,7 +89,11 @@ extension PortfolioActivityCollectionViewCell {
         nameTitleLabel.text = model.name
         totalAmountLabel.text = "$"+model.totalPrice.rounded(toDecimalPlaces: 2)
         pieceCoinLabel.text = "\(model.piece.doubleValue) \(model.symbol.uppercased())"
-        
+        if model.isDeleted {
+            containerView.backgroundColor = .systemRed.withAlphaComponent(0.6)
+        } else {
+            containerView.backgroundColor = .tertiarySystemFill
+        }
         if let url = URL(string: model.imageUrl) {
             ImageLoader.shared.downloadImage(url) { [weak self] result in
                 switch result {

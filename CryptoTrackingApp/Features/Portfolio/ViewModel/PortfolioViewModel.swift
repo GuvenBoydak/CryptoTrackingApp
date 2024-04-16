@@ -12,12 +12,15 @@ import FirebaseAuth
 
 protocol PortfolioViewModelProtocol: AnyObject {
     func didReloadData()
+    func goToEditAssetVC(asset: Asset)
 }
 
 final class PortfolioViewModel: NSObject {
     var assets: [Asset] = []
+    private var coins: [Coin] = []
     weak var delegate: PortfolioViewModelProtocol?
     var isShowActivityCell = false
+    private var assetActivitys: [Asset] = []
     
     override init() {
         super.init()
@@ -29,6 +32,7 @@ extension PortfolioViewModel {
         
     }
     func fetchAssetData() {
+        assets.removeAll()
         guard let user = Auth.auth().currentUser else { return }
         Firestore.firestore().collection("Asset").whereField("userId", isEqualTo: user.uid).getDocuments { [weak self] snapshot, error in
             guard let documents = snapshot?.documents else {
@@ -37,15 +41,17 @@ extension PortfolioViewModel {
             // Asset verilerini al
             let assets = documents.compactMap { document -> Asset? in
                 let assetData = document.data()
-                let asset = Asset(data: assetData)
+                let asset = Asset(data: assetData,documentId: document.documentID)
                 return asset
             }
             // Coin verilerini al
             self?.fetchCoins { coins in
+                self?.coins = coins
                 // Asset ve Coin verilerini eşleştir
                 self?.assets = assets.compactMap { asset -> Asset? in
-                    if let coin = coins.first(where: { $0.id == asset.id }) {
-                        return Asset(id: asset.id,
+                    if let coin = coins.first(where: { $0.id == asset.id && !asset.isDeleted }) {
+                        return Asset(documentId: asset.documentId,
+                                     id: asset.id,
                                      userId: asset.userId,
                                      imageUrl: asset.imageUrl,
                                      name: asset.name,
@@ -54,7 +60,8 @@ extension PortfolioViewModel {
                                      priceChange: coin.priceChangePercentage24H,
                                      totalPrice: asset.totalPrice,
                                      piece: asset.piece,
-                                     date: asset.date)
+                                     date: asset.date,
+                                     isDeleted: asset.isDeleted)
                     }
                     return nil
                 }.sorted { $0.totalPrice > $1.totalPrice }
@@ -74,26 +81,67 @@ extension PortfolioViewModel {
             }
         }
     }
+    private func deleteAsset(asset: Asset) {
+        let params = asset.createFirebaseModel(isDeleted: true)
+        Firestore.firestore().collection("Asset").document(asset.documentId).setData(params)
+    }
+    private func setCoinPrice(coin: Coin){
+        UserDefaults.standard.set(coin.currentPrice, forKey: coin.id)
+    }
+    func fetchAssetActivity(completion: @escaping (Bool) -> ()) {
+        assetActivitys.removeAll()
+        guard let user = Auth.auth().currentUser else { return }
+        Firestore.firestore().collection("Asset").whereField("userId", isEqualTo: user.uid).getDocuments { [weak self] snapshot, error in
+            guard let documents = snapshot?.documents else {
+                completion(false)
+                return
+            }
+            documents.forEach { document in
+                let asset = Asset(data: document.data(), documentId: document.documentID)
+                self?.assetActivitys.append(asset)
+            }
+            self?.assetActivitys.sorted(by: { $0.date > $1.date })
+            completion(true)
+        }
+    }
 }
 // MARK: - UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout
-extension PortfolioViewModel: UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        assets.count
-    }
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+extension PortfolioViewModel: UITableViewDelegate,UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isShowActivityCell {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PortfolioActivityCollectionViewCell.identifier, for: indexPath) as! PortfolioActivityCollectionViewCell
-            cell.configure(model: assets[indexPath.row])
+         return assetActivitys.count
+        }
+        return assets.count
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if isShowActivityCell {
+            let cell = tableView.dequeueReusableCell(withIdentifier: PortfolioActivityTableViewCell.identifier, for: indexPath) as! PortfolioActivityTableViewCell
+            cell.configure(model: assetActivitys[indexPath.row])
             return cell
         }
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PortfolioCollectionViewCell.identifier, for: indexPath) as! PortfolioCollectionViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: PortfolioTableViewCell.identifier, for: indexPath) as! PortfolioTableViewCell
         cell.configure(model: assets[indexPath.row])
         return cell
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        .init(width: UIScreen.main.bounds.width, height: 65)
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Sil") { [weak self] action, view, completion in
+            guard let strongSelf = self else { return }
+            strongSelf.deleteAsset(asset: strongSelf.assets[indexPath.item])
+            strongSelf.fetchAssetData()
+        }
+        let swipeActions = UISwipeActionsConfiguration(actions: [deleteAction])
+        return swipeActions
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        1
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let editAction = UIContextualAction(style: .destructive, title: "Edit") { [weak self] action, view, completion in
+            guard let strongSelf = self else { return }
+            let asset = strongSelf.assets[indexPath.item]
+            if let coin = strongSelf.coins.first(where: { $0.id == asset.id }) {
+                strongSelf.setCoinPrice(coin: coin)
+            }
+            strongSelf.delegate?.goToEditAssetVC(asset: asset)
+        }
+        let swipeActions = UISwipeActionsConfiguration(actions: [editAction])
+        return swipeActions
     }
 }

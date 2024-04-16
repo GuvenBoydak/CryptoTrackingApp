@@ -7,8 +7,8 @@
 
 import UIKit
 
-final class PortfolioCollectionViewCell: UICollectionViewCell {
-    static let identifier = "PortfolioCollectionViewCell"
+final class PortfolioTableViewCell: UITableViewCell {
+    static let identifier = "PortfolioTableViewCell"
     // MARK: - UIElements
     private let containerView: UIView = {
         let view = UIView()
@@ -63,17 +63,16 @@ final class PortfolioCollectionViewCell: UICollectionViewCell {
     // MARK: - Properties
     
     // MARK: - Life Cycle
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 // MARK: - Helpers
-extension PortfolioCollectionViewCell {
+extension PortfolioTableViewCell {
     private func setup() {
         addConstraint()
     }

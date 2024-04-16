@@ -10,6 +10,7 @@ import SnapKit
 
 protocol PortfolioViewProtocol: AnyObject {
     func didTapAddAsset()
+    func goToEditAssetVC(asset: Asset)
 }
 
 final class PortfolioView: UIView {
@@ -75,13 +76,11 @@ final class PortfolioView: UIView {
         label.font = .systemFont(ofSize: 18,weight: .medium)
         return label
     }()
-    private let collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(PortfolioCollectionViewCell.self, forCellWithReuseIdentifier: PortfolioCollectionViewCell.identifier)
-        collectionView.register(PortfolioActivityCollectionViewCell.self, forCellWithReuseIdentifier: PortfolioActivityCollectionViewCell.identifier)
-        return collectionView
+    private let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(PortfolioTableViewCell.self, forCellReuseIdentifier: PortfolioTableViewCell.identifier)
+        tableView.register(PortfolioActivityTableViewCell.self, forCellReuseIdentifier: PortfolioActivityTableViewCell.identifier)
+        return tableView
     }()
     private var stackView: UIStackView!
     // MARK: - Properties
@@ -137,10 +136,12 @@ extension PortfolioView {
         }
     }
     private func setupCollectionView() {
-        collectionView.delegate = portfolioVM
-        collectionView.dataSource = portfolioVM
-        addSubview(collectionView)
-        collectionView.snp.makeConstraints { make in
+        tableView.delegate = portfolioVM
+        tableView.dataSource = portfolioVM
+        tableView.rowHeight = 70
+        tableView.separatorStyle = .none
+        addSubview(tableView)
+        tableView.snp.makeConstraints { make in
             make.top.equalTo(stackView.snp.bottom).offset(8)
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
@@ -169,7 +170,11 @@ extension PortfolioView {
     @objc
     private func didTapActivityButton(){
         portfolioVM.isShowActivityCell = true
-        didReloadData()
+        portfolioVM.fetchAssetActivity { result in
+            if result {
+                self.didReloadData()
+            }
+        }
         currentAssetButton.tintColor = .systemGray
         currentAssetButton.setAttributedTitle(NSAttributedString(string: LocalizableKey.Portfolio.currentAsset.title,
                                                      attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium),
@@ -189,8 +194,11 @@ extension PortfolioView: PortfolioViewModelProtocol {
     func didReloadData() {
         DispatchQueue.main.async { [weak self] in
             guard let strongSelf = self else { return }
-            strongSelf.collectionView.reloadData()
+            strongSelf.tableView.reloadData()
             strongSelf.totalPriceValueLabel.text = "$"+strongSelf.portfolioVM.assets.reduce(0, { $0 + $1.totalPrice }).rounded(toDecimalPlaces: 2)
         }
+    }
+    func goToEditAssetVC(asset: Asset) {
+        delegate?.goToEditAssetVC(asset: asset)
     }
 }

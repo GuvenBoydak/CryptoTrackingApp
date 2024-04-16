@@ -14,7 +14,7 @@ final class AddAssetViewModel {
 // MARK: - Helpers
 extension AddAssetViewModel {
     func createAsset(asset: Asset) {
-        let model = asset.createFirebaseModel()
+        let model = asset.createFirebaseModel(isDeleted: false)
         Firestore.firestore().collection("Asset").addDocument(data: model) { error in
             guard let error = error else {
                 return

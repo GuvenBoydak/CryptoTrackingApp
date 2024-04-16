@@ -47,4 +47,9 @@ extension PortfolioViewController: PortfolioViewProtocol {
         searchVC.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(searchVC, animated: true)
     }
+    func goToEditAssetVC(asset: Asset) {
+        let vc = EditAssetViewController(asset: asset)
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
